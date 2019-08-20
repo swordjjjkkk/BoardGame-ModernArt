@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1280,720">
+  <displayList>
+    <image id="n0_mggr" name="n0" src="jvtj0" fileName="CommonAsset/loginbackground.png" xy="0,0" size="1280,720"/>
+    <component id="n3_mggr" name="n3" src="mggrk" fileName="RoomChoose/createroombutton.xml" xy="328,371"/>
+    <component id="n4_mggr" name="n4" src="mggrl" fileName="RoomChoose/joinroombutton.xml" xy="646,371"/>
+    <component id="n5_mggr" name="n5" src="mggrm" fileName="RoomChoose/inputcomponent.xml" xy="434,176"/>
+  </displayList>
+</component>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="250,50">
+  <displayList>
+    <text id="n0_92hw" name="n0" xy="0,10" size="86,31" fontSize="24" autoSize="none" text="用户名:"/>
+    <image id="n1_92hw" name="n1" src="jvtjb" fileName="Login/input.png" xy="85,0"/>
+    <text id="n2_92hw" name="n2" xy="90,10" size="140,31" input="true" fontSize="24" autoSize="none" text=""/>
+  </displayList>
+</component>

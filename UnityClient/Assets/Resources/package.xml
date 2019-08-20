@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="josdyi85" jpegQuality="80" compressPNG="true">
+  <resources>
+    <image id="jvtj0" name="loginbackground.png" path="/CommonAsset/" exported="true"/>
+    <image id="jvtjb" name="input.png" path="/CommonAsset/" exported="true"/>
+    <component id="92hwc" name="inputcomponent.xml" path="/Login/" exported="true"/>
+    <image id="92hwf" name="buttonchoose.png" path="/CommonAsset/" exported="true"/>
+    <image id="92hwg" name="button.png" path="/CommonAsset/" exported="true"/>
+    <component id="92hwh" name="loginbutton.xml" path="/Login/" exported="true"/>
+    <component id="92hwi" name="loginui.xml" path="/Login/" exported="true"/>
+    <component id="mggrj" name="roomchooseui.xml" path="/RoomChoose/" exported="true"/>
+    <component id="mggrk" name="createroombutton.xml" path="/RoomChoose/" exported="true"/>
+    <component id="mggrl" name="joinroombutton.xml" path="/RoomChoose/" exported="true"/>
+    <component id="mggrm" name="inputcomponent.xml" path="/RoomChoose/" exported="true"/>
+    <component id="txz9n" name="gamepanelui.xml" path="/GamePanel/" exported="true"/>
+    <component id="txz9o" name="readybutton.xml" path="/GamePanel/" exported="true"/>
+    <component id="txz9p" name="sellbutton.xml" path="/GamePanel/" exported="true"/>
+    <component id="txz9q" name="buybutton.xml" path="/GamePanel/" exported="true"/>
+    <component id="txz9r" name="pokerarea.xml" path="/GamePanel/" exported="true"/>
+    <image id="txz9s" name="green.png" path="/CommonAsset/" exported="true"/>
+    <component id="txz9t" name="inputcomponent.xml" path="/GamePanel/" exported="true"/>
+    <image id="txz9u" name="yellow.png" path="/CommonAsset/" exported="true"/>
+    <component id="txz9v" name="otherplayer.xml" path="/GamePanel/" exported="true"/>
+    <component id="txz9w" name="money.xml" path="/GamePanel/" exported="true"/>
+    <image id="txz9x" name="brown.png" path="/CommonAsset/" exported="true"/>
+    <component id="txz9y" name="deskarea.xml" path="/GamePanel/" exported="true"/>
+  </resources>
+  <publish name="Package1" path="D:\SourceTreeProject\ModernArt\FGUIModernArt\assets\Package1"/>
+</packageDescription>

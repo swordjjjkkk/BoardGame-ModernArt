@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1280,720">
+  <displayList>
+    <image id="n0_mggr" name="n0" src="jvtj0" fileName="Login/loginbackground.png" xy="0,0" size="1280,720"/>
+    <component id="n1_mggr" name="n1" src="92hwc" fileName="Login/inputcomponent.xml" xy="490,224"/>
+    <component id="n2_mggr" name="n2" src="92hwh" fileName="Login/loginbutton.xml" xy="552,363"/>
+  </displayList>
+</component>
