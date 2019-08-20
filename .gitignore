@@ -10,6 +10,7 @@ UnityClient/[Ll]ibrary/
 UnityClient/[Ll]ogs/
 UnityClient/obj/
 UnityClient/[Pp]ackages/
+UnityClient/[Bb]uild/
 UnityClient/[Tt]emp/
 UnityClient/Assembly-CSharp.csproj
 UnityClient/Assembly-CSharp-Editor.csproj
