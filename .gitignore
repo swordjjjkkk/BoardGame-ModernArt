@@ -22,5 +22,7 @@ UnityClient/.vs
 PomeloServer/game-server/.idea
 PomeloServer/game-server/[Ll]ogs
 PomeloServer/game-server/node_modules
+PomeloServer/game-server/config/
+
 
 FairyGUI/.objs/
