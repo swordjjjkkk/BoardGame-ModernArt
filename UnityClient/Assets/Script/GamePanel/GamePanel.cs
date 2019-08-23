@@ -35,6 +35,10 @@ public class GamePanel : MonoBehaviour
         {
             chatText.text += data["msg"] + "\n";
         });
+        //pclient.on("onGameStart", (data) =>
+        //{
+        //    Debug.unityLogger.Log("game start");
+        //});
 
     }
 
@@ -51,7 +55,13 @@ public class GamePanel : MonoBehaviour
         msg["from"] = username;
         msg["target"] = "*";
         pclient.request("chat.chatHandler.send", msg, OnSendMessage);
-   
+        pclient.request("game.gameHandler.prepare", msg, OnPrePare);
+
+    }
+
+    void OnPrePare(JsonObject obj)
+    {
+        Debug.unityLogger.Log(obj);
     }
 
     void OnSendMessage(JsonObject obj)

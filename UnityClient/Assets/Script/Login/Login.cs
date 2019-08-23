@@ -112,6 +112,7 @@ public class Login : MonoBehaviour
 
     void Entry()
     {
+      
         Debug.unityLogger.Log("entry1");
         Debug.unityLogger.Log("entry2");
         _bNeedLoadScene = true;
