@@ -102,7 +102,18 @@ public class Login : MonoBehaviour
                 JsonObject user = new JsonObject();
                 pomeloClient.connect(user, data =>
                 {
-                    Entry();
+                    JsonObject msg = new JsonObject();
+                    msg["username"] = obj_username.text;
+                    pomeloClient.request("connector.entryHandler.enter", msg, res=>
+                    {
+                        Debug.unityLogger.Log(res["result"]);
+                        
+                        if ((string)res["result"]== "success")
+                        {
+                            Entry();
+                        }
+                        
+                    });
                 });
             });
 

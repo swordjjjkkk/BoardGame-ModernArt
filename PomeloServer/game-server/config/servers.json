@@ -11,7 +11,7 @@
              {"id":"chat-server-3", "host":"127.0.0.1", "port":16052}
         ],
       "game":[
-             {"id":"chat-server-1", "host":"127.0.0.1", "port":16055}
+             {"id":"game-server-1", "host":"127.0.0.1", "port":16055,"args": "--inspect=9233"}
 
         ],
         "gate":[

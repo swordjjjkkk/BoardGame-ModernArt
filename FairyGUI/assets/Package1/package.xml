@@ -28,5 +28,5 @@
     <component id="o8wz12" name="sendbutton.xml" path="/GamePanel/"/>
     <component id="o8wz13" name="message.xml" path="/GamePanel/"/>
   </resources>
-  <publish name="Package1" path="D:\sourcetree\ModernProject\MordernArt\Assets\FGUIPackages"/>
+  <publish name="Package1" path="D:\BoardGame-ModernArt\UnityClient\Assets\Resources"/>
 </packageDescription>

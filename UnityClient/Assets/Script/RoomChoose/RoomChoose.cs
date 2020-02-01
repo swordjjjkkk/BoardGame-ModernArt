@@ -15,9 +15,11 @@ public class RoomChoose : MonoBehaviour
     private GObject _CreateBtn;
     private GObject _JoinBtn;
     public static string rid;
+    public static string playernum;
 
     private string username = Login.username;
     private GTextField roomidobj;
+    private GTextField playernumobj;
     protected bool _bNeedLoadScene = false;
     // Start is called before the first frame update
     void Start()
@@ -29,6 +31,7 @@ public class RoomChoose : MonoBehaviour
         _CreateBtn = _mainView.GetChild("n3");
         _JoinBtn = _mainView.GetChild("n4");
         roomidobj = _mainView.GetChild("n5").asCom.GetChild("n2").asTextField;
+        playernumobj = _mainView.GetChild("n6").asCom.GetChild("n2").asTextField;
         _CreateBtn.onClick.Add(BtnCreateRoom);
         _JoinBtn.onClick.Add(BtnJoinRoom);
         
@@ -48,7 +51,13 @@ public class RoomChoose : MonoBehaviour
     void BtnCreateRoom()
     {
         Debug.unityLogger.Log("button clicked");
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        JsonObject msg = new JsonObject();
+        rid = (roomidobj.text);
+        playernum = playernumobj.text;
+        msg["rid"] = rid;
+        msg["playernum"] = playernum;
+        pclient.request("game.gameHandler.CreateRoom", msg, OnConnect);
     }
     void BtnJoinRoom()
     {
@@ -56,15 +65,19 @@ public class RoomChoose : MonoBehaviour
         JsonObject msg = new JsonObject();
         rid = (roomidobj.text);
         msg["rid"] = rid;
-        msg["username"] = username;
+       
         pclient.request("connector.entryHandler.enter", msg, OnConnect);
 
         //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     
     }
 
-    void OnConnect(JsonObject result)
+    void OnConnect(JsonObject res)
     {
-        _bNeedLoadScene = true;
+        if((string)res["result"]=="success")
+        {
+            _bNeedLoadScene = true;
+        }
+        
     }
 }
