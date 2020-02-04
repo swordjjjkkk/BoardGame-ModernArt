@@ -75,7 +75,7 @@ handler.enter = function (msg, session, next) {
     var uid = msg.username;
     var sessionService = self.app.get('sessionService');
 
-    //duplicate log in
+    //duplicate log ingetByUid
     if (!!sessionService.getByUid(uid)) {
         next(null, {
             code: 500,

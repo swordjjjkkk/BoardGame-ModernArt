@@ -12,6 +12,12 @@ EditorBuildSettings:
     path: Assets/Scenes/RoomChoose.unity
     guid: 7d0c42b90e46dd64cb4110d4477a94b6
   - enabled: 1
-    path: Assets/Scenes/GamePanel.unity
+    path: Assets/Scenes/GamePanel3.unity
+    guid: c19518e7d7253914286aec9174a335fa
+  - enabled: 1
+    path: Assets/Scenes/GamePanel4.unity
     guid: 1c41dac3bace4794fbfdf4f571d86c2f
+  - enabled: 1
+    path: Assets/Scenes/GamePanel5.unity
+    guid: fb983a7b28cc4b04189a8eabdef36cca
   m_configObjects: {}

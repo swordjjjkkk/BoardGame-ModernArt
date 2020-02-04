@@ -21,6 +21,7 @@ public class RoomChoose : MonoBehaviour
     private GTextField roomidobj;
     private GTextField playernumobj;
     protected bool _bNeedLoadScene = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,8 +31,8 @@ public class RoomChoose : MonoBehaviour
 
         _CreateBtn = _mainView.GetChild("n3");
         _JoinBtn = _mainView.GetChild("n4");
-        roomidobj = _mainView.GetChild("n5").asCom.GetChild("n2").asTextField;
-        playernumobj = _mainView.GetChild("n6").asCom.GetChild("n2").asTextField;
+        roomidobj = _mainView.GetChild("n8").asCom.GetChild("n2").asTextField;
+        playernumobj = _mainView.GetChild("n7").asCom.GetChild("n2").asTextField;
         _CreateBtn.onClick.Add(BtnCreateRoom);
         _JoinBtn.onClick.Add(BtnJoinRoom);
         
@@ -44,7 +45,12 @@ public class RoomChoose : MonoBehaviour
         if (_bNeedLoadScene)
         {
             // 场景切换
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            if(playernum=="3")
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            if (playernum == "4")
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2);
+            if (playernum == "5")
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 3);
         }
 
     }
@@ -66,7 +72,7 @@ public class RoomChoose : MonoBehaviour
         rid = (roomidobj.text);
         msg["rid"] = rid;
        
-        pclient.request("connector.entryHandler.enter", msg, OnConnect);
+        pclient.request("game.gameHandler.JoinRoom", msg, OnConnect);
 
         //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     
@@ -77,7 +83,8 @@ public class RoomChoose : MonoBehaviour
         if((string)res["result"]=="success")
         {
             _bNeedLoadScene = true;
+            playernum = (string)res["playernum"];
         }
-        
+      
     }
 }

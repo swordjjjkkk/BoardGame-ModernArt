@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="800,600">
+  <displayList>
+    <image id="n26_ue89" name="n26" src="ue894b" fileName="CommonAsset/background.png" xy="-1,2"/>
+    <component id="n6_txz9" name="n6" src="txz9v" fileName="GamePanel/otherplayer.xml" xy="630,5" size="169,115"/>
+    <component id="n7_txz9" name="n7" src="txz9v" fileName="GamePanel/otherplayer.xml" xy="7,3" size="170,116"/>
+    <text id="n9_txz9" name="n9" xy="645,37" size="152,63" fontSize="48" autoSize="none" text="玩家2"/>
+    <text id="n10_txz9" name="n10" xy="21,32" size="152,63" fontSize="48" autoSize="none" text="玩家3"/>
+    <component id="n14_txz9" name="n14" src="txz9y" fileName="GamePanel/deskarea.xml" xy="178,118" size="451,250"/>
+    <component id="n23_fkvs" name="userpanel" src="fkvs14" fileName="UserPanel/userpanel.xml" xy="0,368"/>
+    <component id="n24_fkvs" name="cards" src="fkvs1z" fileName="Card/cards.xml" xy="4,2"/>
+    <component id="n25_ue89" name="n25" src="fkvs1z" fileName="Card/cards.xml" xy="0,0"/>
+  </displayList>
+</component>

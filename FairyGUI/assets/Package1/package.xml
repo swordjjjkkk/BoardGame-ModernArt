@@ -11,8 +11,8 @@
     <component id="mggrj" name="roomchooseui.xml" path="/RoomChoose/" exported="true"/>
     <component id="mggrk" name="createroombutton.xml" path="/RoomChoose/"/>
     <component id="mggrl" name="joinroombutton.xml" path="/RoomChoose/"/>
-    <component id="mggrm" name="inputcomponent.xml" path="/RoomChoose/"/>
-    <component id="txz9n" name="gamepanelui.xml" path="/GamePanel/" exported="true"/>
+    <component id="mggrm" name="playercount.xml" path="/RoomChoose/"/>
+    <component id="txz9n" name="gamepanel4.xml" path="/GamePanel/" exported="true"/>
     <component id="txz9o" name="readybutton.xml" path="/GamePanel/"/>
     <component id="txz9p" name="sellbutton.xml" path="/GamePanel/"/>
     <component id="txz9q" name="buybutton.xml" path="/GamePanel/"/>
@@ -27,6 +27,96 @@
     <component id="o8wz10" name="chatarea.xml" path="/GamePanel/"/>
     <component id="o8wz12" name="sendbutton.xml" path="/GamePanel/"/>
     <component id="o8wz13" name="message.xml" path="/GamePanel/"/>
+    <component id="fkvs14" name="userpanel.xml" path="/UserPanel/" exported="true"/>
+    <component id="fkvs17" name="paimai.xml" path="/UserPanel/"/>
+    <component id="fkvs18" name="Label1.xml" path="/UserPanel/"/>
+    <component id="fkvs1b" name="maihui.xml" path="/UserPanel/"/>
+    <component id="fkvs1c" name="ready.xml" path="/UserPanel/"/>
+    <component id="fkvs1f" name="gamepanel3.xml" path="/GamePanel/" exported="true"/>
+    <component id="fkvs1g" name="gamepanel5.xml" path="/GamePanel/" exported="true"/>
+    <component id="fkvs1h" name="roomid.xml" path="/RoomChoose/"/>
+    <component id="fkvs1z" name="cards.xml" path="/Card/"/>
+    <image id="fkvs23" name="轮流.png" path="/Card/"/>
+    <image id="fkvs24" name="公开.png" path="/Card/"/>
+    <image id="fkvs25" name="联合.png" path="/Card/"/>
+    <image id="fkvs26" name="秘密.png" path="/Card/"/>
+    <image id="fkvs27" name="一口价.png" path="/Card/"/>
+    <image id="ue8928" name="灰色.png" path="/Card/"/>
+    <image id="ue8929" name="黄色.png" path="/Card/"/>
+    <image id="ue892a" name="绿色.png" path="/Card/"/>
+    <image id="ue892b" name="红色.png" path="/Card/"/>
+    <image id="ue892c" name="蓝色.png" path="/Card/"/>
+    <component id="ue892d" name="card0.xml" path="/Card/"/>
+    <component id="ue892e" name="card1.xml" path="/Card/"/>
+    <component id="ue892f" name="card2.xml" path="/Card/"/>
+    <component id="ue892g" name="card3.xml" path="/Card/"/>
+    <component id="ue892h" name="card4.xml" path="/Card/"/>
+    <component id="ue892i" name="card5.xml" path="/Card/"/>
+    <component id="ue892j" name="card6.xml" path="/Card/"/>
+    <component id="ue892k" name="card7.xml" path="/Card/"/>
+    <component id="ue892l" name="card8.xml" path="/Card/"/>
+    <component id="ue892m" name="card9.xml" path="/Card/"/>
+    <component id="ue892n" name="card10.xml" path="/Card/"/>
+    <component id="ue892o" name="card11.xml" path="/Card/"/>
+    <component id="ue892p" name="card12.xml" path="/Card/"/>
+    <component id="ue892q" name="card13.xml" path="/Card/"/>
+    <component id="ue892r" name="card17.xml" path="/Card/"/>
+    <component id="ue892s" name="card18.xml" path="/Card/"/>
+    <component id="ue892t" name="card19.xml" path="/Card/"/>
+    <component id="ue892u" name="card20.xml" path="/Card/"/>
+    <component id="ue892v" name="card21.xml" path="/Card/"/>
+    <component id="ue892w" name="card22.xml" path="/Card/"/>
+    <component id="ue892x" name="card23.xml" path="/Card/"/>
+    <component id="ue892y" name="card24.xml" path="/Card/"/>
+    <component id="ue892z" name="card14.xml" path="/Card/"/>
+    <component id="ue8930" name="card15.xml" path="/Card/"/>
+    <component id="ue8931" name="card16.xml" path="/Card/"/>
+    <component id="ue8932" name="card25.xml" path="/Card/"/>
+    <component id="ue8933" name="card26.xml" path="/Card/"/>
+    <component id="ue8934" name="card31.xml" path="/Card/"/>
+    <component id="ue8935" name="card32.xml" path="/Card/"/>
+    <component id="ue8936" name="card33.xml" path="/Card/"/>
+    <component id="ue8937" name="card34.xml" path="/Card/"/>
+    <component id="ue8938" name="card35.xml" path="/Card/"/>
+    <component id="ue8939" name="card36.xml" path="/Card/"/>
+    <component id="ue893a" name="card37.xml" path="/Card/"/>
+    <component id="ue893b" name="card38.xml" path="/Card/"/>
+    <component id="ue893c" name="card27.xml" path="/Card/"/>
+    <component id="ue893d" name="card28.xml" path="/Card/"/>
+    <component id="ue893e" name="card29.xml" path="/Card/"/>
+    <component id="ue893f" name="card30.xml" path="/Card/"/>
+    <component id="ue893g" name="card39.xml" path="/Card/"/>
+    <component id="ue893h" name="card40.xml" path="/Card/"/>
+    <component id="ue893i" name="card46.xml" path="/Card/"/>
+    <component id="ue893j" name="card47.xml" path="/Card/"/>
+    <component id="ue893k" name="card48.xml" path="/Card/"/>
+    <component id="ue893l" name="card49.xml" path="/Card/"/>
+    <component id="ue893m" name="card50.xml" path="/Card/"/>
+    <component id="ue893n" name="card51.xml" path="/Card/"/>
+    <component id="ue893o" name="card52.xml" path="/Card/"/>
+    <component id="ue893p" name="card53.xml" path="/Card/"/>
+    <component id="ue893q" name="card41.xml" path="/Card/"/>
+    <component id="ue893r" name="card42.xml" path="/Card/"/>
+    <component id="ue893s" name="card43.xml" path="/Card/"/>
+    <component id="ue893t" name="card44.xml" path="/Card/"/>
+    <component id="ue893u" name="card45.xml" path="/Card/"/>
+    <component id="ue893v" name="card54.xml" path="/Card/"/>
+    <component id="ue893w" name="card55.xml" path="/Card/"/>
+    <component id="ue893x" name="card62.xml" path="/Card/"/>
+    <component id="ue893y" name="card63.xml" path="/Card/"/>
+    <component id="ue893z" name="card64.xml" path="/Card/"/>
+    <component id="ue8940" name="card65.xml" path="/Card/"/>
+    <component id="ue8941" name="card66.xml" path="/Card/"/>
+    <component id="ue8942" name="card67.xml" path="/Card/"/>
+    <component id="ue8943" name="card68.xml" path="/Card/"/>
+    <component id="ue8944" name="card69.xml" path="/Card/"/>
+    <component id="ue8945" name="card56.xml" path="/Card/"/>
+    <component id="ue8946" name="card57.xml" path="/Card/"/>
+    <component id="ue8947" name="card58.xml" path="/Card/"/>
+    <component id="ue8948" name="card59.xml" path="/Card/"/>
+    <component id="ue8949" name="card60.xml" path="/Card/"/>
+    <component id="ue894a" name="card61.xml" path="/Card/"/>
+    <image id="ue894b" name="background.png" path="/CommonAsset/"/>
   </resources>
   <publish name="Package1" path="D:\BoardGame-ModernArt\UnityClient\Assets\Resources"/>
 </packageDescription>
