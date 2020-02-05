@@ -74,9 +74,13 @@ class Player {
         this.userid = session.uid;
         this.frontendId = session.frontendId;
         this.ready = false;
-        this.money = 100;
+        this.money = 100; //资金
+        this.buycard = []; //买到的画作
+        this.buymoney = 0; //购买画作的钱
+        this.host = false; //是否为主持
     }
 }
+
 
 class Room {
     constructor(rid, playernum, session, pomelo, next) {
@@ -84,9 +88,21 @@ class Room {
         this.pomelo = pomelo
         this.rid = rid;
         this.poker = new Poker();
-        this.playernum = playernum;
+
         this.playercount = 0
-        this.playerlist = [];//存玩家session
+        //this.playerlist = [];//存玩家session
+
+        //游戏状态
+        this.gamestate = {
+            state: "wating",// wating  running
+            playernum:parseInt(playernum),
+            playerlist: [],//new Player
+            turn: 'all', //uid  all
+            action: 'sell',//sell buy
+            sellcard: [],//new Card
+
+        };
+
 
         var room = this.pomelo.app.get('channelService').getChannel(this.rid, false);
         if (!!room) {
@@ -102,53 +118,54 @@ class Room {
     }
 
     GetPlayer(uid) {
-        for (var i in this.playerlist) {
-            if (this.playerlist[i].userid == uid) {
-                return this.playerlist[i];
+        for (var i in this.gamestate.playerlist) {
+            if (this.gamestate.playerlist[i].userid == uid) {
+                return this.gamestate.playerlist[i];
             }
         }
         return null;
     }
 
     GameStart() {
+        this.gamestate.state = 'running';
         this.RoomPushMessage({route: 'onGameStart', money: "100"});
         this.poker.Shuffle();
-        for (var i in this.playerlist) {
-            if (parseInt(this.playernum) == 3) {
+        for (var i in this.gamestate.playerlist) {
+            if (this.gamestate.playernum == 3) {
                 var param = {
                     route: 'onAddCard',
                     cards: this.poker.staticcards.splice(0, 11)
 
                 }
-                this.PlayerPushMessage(param, this.playerlist[i].userid, this.playerlist[i].frontendId)
+                this.PlayerPushMessage(param, this.gamestate.playerlist[i].userid, this.gamestate.playerlist[i].frontendId)
 
             }
-            if (parseInt(this.playernum) == 4) {
+            if (this.gamestate.playernum == 4) {
                 var param = {
                     route: 'onAddCard',
                     cards: this.poker.staticcards.slice(0, 9)
                 }
-                this.PlayerPushMessage(param, this.playerlist[i].userid, this.playerlist[i].serverid)
+                this.PlayerPushMessage(param, this.gamestate.playerlist[i].userid, this.gamestate.playerlist[i].frontendId)
             }
-            if (parseInt(this.playernum) == 5) {
+            if (this.gamestate.playernum == 5) {
                 var param = {
                     route: 'onAddCard',
                     cards: this.poker.staticcards.slice(0, 8)
                 }
-                this.PlayerPushMessage(param, this.playerlist[i].userid, this.playerlist[i].serverid)
+                this.PlayerPushMessage(param, this.gamestate.playerlist[i].userid, this.gamestate.playerlist[i].frontendId)
             }
         }
     }
 
     CheckReady() {
         var temp = 0;
-        for (var i in this.playerlist) {
-            if (this.playerlist[i].ready) {
+        for (var i in this.gamestate.playerlist) {
+            if (this.gamestate.playerlist[i].ready) {
                 temp++;
             }
         }
-        // this.GameStart();
-        if (temp == parseInt(this.playernum)) {
+        //this.GameStart();
+        if (temp == this.gamestate.playernum && this.gamestate.state == 'wating') {
             this.GameStart();
         }
     }
@@ -165,6 +182,13 @@ class Room {
         this.pomelo.app.get('channelService').getChannel(this.rid, false).pushMessage(param);
     }
 
+    GameSynData() {
+        this.RoomPushMessage({
+            route: 'GameNotify',
+            data: this.gamestate
+        });
+    }
+
     JoinRoom(session, next) {
 
         var channel = this.pomelo.app.get('channelService').getChannel(this.rid, false);
@@ -178,14 +202,16 @@ class Room {
             }
         });
 
-        this.playerlist.push(new Player(session));
+        this.gamestate.playerlist.push(new Player(session));
         next(null, {
             result: 'success',
-            playernum: this.playernum
+            playernum: this.gamestate.playernum
         });
+        this.GameSynData();
 
 
     }
+
 
 }
 
@@ -196,7 +222,7 @@ module.exports = function (app) {
 
 
 var handler = Handler.prototype;
-handler.roomlist = []
+handler.roomlist = [];
 /**
  * Send messages to users
  *
@@ -205,25 +231,38 @@ handler.roomlist = []
  * @param  {Function} next next stemp callback
  *
  */
-handler.prepare = function (msg, session, next) {
 
-    // var channel = this.channelService.getChannel(session.get('rid'), false);
-    //
-    // var param = {
-    // 	route: 'onGameStart',
-    // 	user: ""
-    // };
-    // channel.pushMessage(param);
 
+handler.GameAction = function (msg, session, next) {
     next(null, {
-        content: 'already prepared'
+        content: 'received'
     });
-    var room = GetRoom(session.get('rid'));
-    var player = room.GetPlayer(session.uid);
-    player.ready = true;
-    room.CheckReady();
+    switch (msg.type) {
+        case "prepare":
+            var room = GetRoom(session.get('rid'));
+            var player = room.GetPlayer(session.uid);
+            player.ready = true;
+            room.CheckReady();
+            break;
+        default:
+            break;
 
-};
+    }
+    GetRoom(session.get('rid')).GameSynData();
+
+}
+
+
+handler.GetGameState = function (msg, session, next) {
+    next(null, {
+        content: 'received'
+    });
+    //具体操作
+
+    GetRoom(session.get("rid")).GameSynData();
+    ;
+
+}
 
 handler.CreateRoom = function (msg, session, next) {
     var room = new Room(msg.rid, msg.playernum, session, this, next);
@@ -237,3 +276,4 @@ handler.JoinRoom = function (msg, session, next) {
         room.JoinRoom(session, next)
     }
 };
+

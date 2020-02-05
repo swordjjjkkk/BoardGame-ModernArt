@@ -7,6 +7,7 @@ using FairyGUI;
 using SimpleJson;
 using Pomelo.DotNetClient;
 using System;
+using Newtonsoft.Json.Linq;
 
 public class RoomChoose : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class RoomChoose : MonoBehaviour
     private GObject _JoinBtn;
     public static string rid;
     public static string playernum;
+    private int iplayernum;
 
     private string username = Login.username;
     private GTextField roomidobj;
@@ -45,11 +47,11 @@ public class RoomChoose : MonoBehaviour
         if (_bNeedLoadScene)
         {
             // 场景切换
-            if(playernum=="3")
+            if(iplayernum==3)
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-            if (playernum == "4")
+            if (iplayernum == 4)
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2);
-            if (playernum == "5")
+            if (iplayernum == 5)
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 3);
         }
 
@@ -63,7 +65,7 @@ public class RoomChoose : MonoBehaviour
         playernum = playernumobj.text;
         msg["rid"] = rid;
         msg["playernum"] = playernum;
-        pclient.request("game.gameHandler.CreateRoom", msg, OnConnect);
+        pclient.request("game.gameHandler.CreateRoom", msg, JoinRoom);
     }
     void BtnJoinRoom()
     {
@@ -72,18 +74,19 @@ public class RoomChoose : MonoBehaviour
         rid = (roomidobj.text);
         msg["rid"] = rid;
        
-        pclient.request("game.gameHandler.JoinRoom", msg, OnConnect);
+        pclient.request("game.gameHandler.JoinRoom", msg, JoinRoom);
 
         //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     
     }
 
-    void OnConnect(JsonObject res)
+    void JoinRoom(JsonObject res)
     {
-        if((string)res["result"]=="success")
+        JObject jobject = (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(res.ToString());
+        if (jobject["result"].ToString()=="success")
         {
             _bNeedLoadScene = true;
-            playernum = (string)res["playernum"];
+            iplayernum = (int)jobject["playernum"];
         }
       
     }

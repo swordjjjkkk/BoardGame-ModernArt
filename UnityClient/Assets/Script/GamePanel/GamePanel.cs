@@ -23,9 +23,20 @@ public class Card
         this.priority = priority;
         this.type = type;
     }
+
+    public Card(JToken i)
+    {
+        id = (int)(i["id"]);
+        priority = (int)(i["priority"]);
+        type = (int)(i["type"]);
+        
+    }
+
     public int id;
     public int priority;
     public int type;
+
+
     public static bool operator ==(Card first, Card second)
     {
         return first.id == second.id ? true : false;
@@ -164,6 +175,102 @@ public class Player
     }
     private GComponent UIPanel;
 }
+
+//this.gamestate = {
+//            state: "wating",// wating  running
+//            playernum:parseInt(playernum),
+//            playerlist: [],//new Player
+//            turn: 'all', //uid  all
+//            action: 'sell',//sell buy
+//            sellcard: [],//new Card
+
+//        };
+
+
+//class Card
+//{
+//    constructor(id, priority, type)
+//    {
+//        this.id = id;
+//        this.priority = priority;
+//        this.type = type;
+//    }
+//}
+//class Player
+//{
+//    constructor(session)
+//    {
+//        this.userid = session.uid;
+//        this.frontendId = session.frontendId;
+//        this.ready = false;
+//        this.money = 100; //资金
+//        this.buycard = []; //买到的画作
+//        this.buymoney = 0; //购买画作的钱
+//        this.host = false; //是否为主持
+//    }
+//}
+
+class MsgPlayer
+{
+    public MsgPlayer(JToken obj)
+    {
+        buycard = new List<Card>();
+        userid = obj["userid"].ToString();
+        ready = (bool)obj["ready"];
+        money = (int)obj["money"];
+        buymoney = (int)obj["buymoney"];
+        host = (bool)obj["host"];
+        JArray jsonbuycard = (JArray)JsonConvert.DeserializeObject(obj["buycard"].ToString());
+        foreach (var i in jsonbuycard)
+        {
+            buycard.Add(new Card(i));
+        }
+
+    }
+    public string userid;
+    public bool ready;
+    public int money;
+    public List<Card> buycard;
+    public int buymoney;
+    public bool host;
+  
+    
+}
+
+
+class MsgData
+{
+    public MsgData(JToken obj)
+    {
+        playerlist = new List<MsgPlayer>();
+        sellcard = new List<Card>();
+        state = obj["state"].ToString();
+        playernum = (int)(obj["playernum"]);
+        turn = obj["turn"].ToString();
+        action = obj["action"].ToString();
+        JArray jsonplayerlist = (JArray)JsonConvert.DeserializeObject(obj["playerlist"].ToString());
+        foreach(var i in jsonplayerlist)
+        {
+            playerlist.Add(new MsgPlayer(i));
+        }
+
+        JArray jsonsellcard = (JArray)JsonConvert.DeserializeObject(obj["sellcard"].ToString());
+        foreach (var i in jsonsellcard)
+        {
+            sellcard.Add(new Card(i));
+        }
+
+
+    }
+    public string state;
+    public int playernum;
+    public List<MsgPlayer> playerlist;
+    public string turn;
+    public string action;
+    public List<Card> sellcard;
+
+
+}
 public class GamePanel : MonoBehaviour
 {
     private PomeloClient pclient = Login.pomeloClient;
@@ -185,6 +292,9 @@ public class GamePanel : MonoBehaviour
     private string rid = RoomChoose.rid;
     private string username = Login.username;
     private Player LocalPlayer;
+
+    private MsgData olddata;
+    private MsgData newdata;
 
     // Start is called before the first frame update
     void Start()
@@ -245,15 +355,77 @@ public class GamePanel : MonoBehaviour
             
          
         });
+        pclient.on("GameNotify", (data) =>
+        {
+
+            OnProcessGameState(data);
+           
+
+
+        });
+        JsonObject msg = new JsonObject();
+        pclient.request("game.gameHandler.GetGameState", msg, null);
 
     }
+    int GetPosition()
+    {
+        for(int i=0;i<newdata.playerlist.Count;i++)
+        {
+            if(newdata.playerlist[i].userid==Login.username)
+            {
+                return i;
+            }
+        }
+        return -1;
+       
+    }
+    void TransferMsg(JToken obj)
+    {
+        newdata = new MsgData(obj);
+    }
 
-    
+    void ProcessMsg()
+    {
+        int pos = GetPosition();
+        if(pos!=-1)
+        {
+            for(int i=1;i<newdata.playernum;i++)
+            {
+                int realpos = (i + pos) % newdata.playernum;
+                if (realpos>=newdata.playerlist.Count)
+                    continue;
+                GTextField playername = _mainView.GetChild("playername"+i.ToString()).asTextField;
+                playername.text = newdata.playerlist[realpos].userid;
+            }
+        
+        }
+        if(newdata.state=="running")
+        {
+            Loom.QueueOnMainThread(() => {//切换为主线程
+
+                ReadyButton.visible = false;
+            });
+            
+        }
+        
+    }
+    private void OnProcessGameState(JsonObject obj)
+    {
+        JObject jobject = (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(obj.ToString());
+        TransferMsg(jobject["data"]);
+        ProcessMsg();
+        olddata = newdata;
+     
+
+
+
+    }
 
     void BtnReady()
     {
         JsonObject msg = new JsonObject();
-        pclient.request("game.gameHandler.prepare", msg, OnPrePare);
+        msg["type"] = "prepare";
+        pclient.request("game.gameHandler.GameAction", msg, OnPrePare);
     }
 
     void GetMessage(JsonObject obj)
