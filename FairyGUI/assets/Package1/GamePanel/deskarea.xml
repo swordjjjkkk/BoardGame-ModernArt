@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="450,250">
+<component size="700,330">
   <displayList>
-    <image id="n0_txz9" name="n0" src="txz9x" fileName="CommonAsset/brown.png" xy="0,0" size="450,250"/>
+    <image id="n0_txz9" name="n0" src="txz9x" fileName="CommonAsset/brown.png" xy="0,0" size="700,330"/>
+    <text id="n1_j8ls" name="commonmsg" xy="2,1" size="695,79" fontSize="60" color="#ffffff" autoSize="none" text=""/>
+    <graph id="n2_j8ls" name="n2" xy="1,81" size="132,243" type="rect" fillColor="#ffb0863e"/>
+    <image id="n3_j8ls" name="n3" src="ue8929" fileName="Card/黄色.png" xy="12,91" size="26,36"/>
+    <image id="n4_j8ls" name="n4" src="ue892b" fileName="Card/红色.png" xy="9,186" size="30,36"/>
+    <image id="n5_j8ls" name="n5" src="ue8928" fileName="Card/灰色.png" xy="10,278" size="34,39"/>
+    <image id="n6_j8ls" name="n6" src="ue892c" fileName="Card/蓝色.png" xy="12,230" size="28,40"/>
+    <image id="n7_j8ls" name="n7" src="ue892a" fileName="Card/绿色.png" xy="9,134" size="31,41"/>
+    <text id="n8_j8ls" name="n8" xy="49,92" size="71,39" fontSize="30" autoSize="none" text="0"/>
+    <text id="n9_j8ls" name="n9" xy="47,136" size="72,39" fontSize="30" autoSize="none" text="0"/>
+    <text id="n10_j8ls" name="n10" xy="54,186" size="63,39" fontSize="30" autoSize="none" text="0"/>
+    <text id="n11_j8ls" name="n11" xy="50,233" size="63,39" fontSize="30" autoSize="none" text="0"/>
+    <text id="n12_j8ls" name="n12" xy="51,279" size="64,39" fontSize="30" autoSize="none" text="0"/>
+    <graph id="n13_cin5" name="n13" xy="236,112" size="365,188" type="rect" fillColor="#00ff0000"/>
   </displayList>
 </component>

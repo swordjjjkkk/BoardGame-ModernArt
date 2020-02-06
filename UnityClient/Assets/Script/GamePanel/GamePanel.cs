@@ -61,6 +61,7 @@ public class CardManager
         this.cardwidth = cardwidth;
         this.cardheight = cardheight;
         this.BtnCardList = BtnCardList ;
+        choose = new List<int>();
       
         cards = new List<Card>();
         
@@ -80,7 +81,18 @@ public class CardManager
     GComponent poker;
     GButton[] BtnCardList;
 
-    int choosen=-1;
+    public Card GetCard(int id)
+    {
+        for(int i = 0; i < cards.Count; i++)
+        {
+            if(cards[i].id==id)
+            {
+                return cards[i];
+            }
+        }
+        return null;
+    }
+    public List<int> choose;
 
     private List<Card> cards;
 
@@ -88,7 +100,11 @@ public class CardManager
     {
         cards.Add(newcard);
     }
-
+    public void Clear()
+    {
+        cards.Clear();
+    }
+ 
  
     public void deletecards(Card oldcard)
     {
@@ -111,7 +127,7 @@ public class CardManager
     }
     public void Init()
     {
-
+        
         cards.Sort((a, b) =>
         {
             return a.id-b.id;
@@ -121,8 +137,15 @@ public class CardManager
         int Y = (this.y + this.height - this.cardheight);
         for(int i = 0; i < cards.Count; i++)
         {
+            if(choose.Contains(cards[i].id))
+            {
+                SetPosition(X, Y-20, cards[i].id);
+            }
+            else
+            {
+                SetPosition(X, Y, cards[i].id);
+            }
             
-            SetPosition(X, Y, cards[i].id);
             X += (this.cardwidth / 2);
         }
     
@@ -132,31 +155,60 @@ public class CardManager
     void CardClicked(EventContext context)
     {
 
-        this.Init();
+        
         int index = (int)((GObject)context.sender).data;
         //BtnCardList[index].SetPosition(0, 0, 0);
-        if(choosen==index)
+        if(choose.Contains(index))
         {
-            choosen = -1;
+            choose.Remove(index);
         }
         else
         {
-            BtnCardList[index].SetPosition(BtnCardList[index].position.x, BtnCardList[index].position.y - 20, BtnCardList[index].position.z);
-            choosen = index;
+            choose.Add(index);
         }
-        
-        this.choosen = index;
+        //if(choose[0]==-1&&choose[1]==-1)
+        //{
+        //    choose[0] = index;
+        //}
+        //else if(choose[0]!=-1&&choose[1]!=-1)
+        //{
+        //    choose[0] = -1;
+        //    choose[1] = -1;
+        //    choose[0] = index;
+        //}
+        //else
+        //{
+        //    if(cards[choose[0]].type==2 && cards[choose[0]].priority==cards[index].priority && cards[index].type!=2)
+        //    {
+        //        choose[1] = index;
+        //    }
+        //    else
+        //    {
 
+        //    }
+        //}
+        //if(choosen==index)
+        //{
+        //    choosen = -1;
+        //}
+        //else
+        //{
+        //    BtnCardList[index].SetPosition(BtnCardList[index].position.x, BtnCardList[index].position.y - 20, BtnCardList[index].position.z);
+        //    choosen = index;
+        //}
         
+        //this.choosen = index;
 
+
+        this.Init();
 
     }
 }
-public class Player
+public class UserPanel
 {
     public CardManager cardmanager;
     public GButton[] BtnCard;
-    public Player(GComponent _mainView)
+    public UserPanel(GComponent _mainView)
     {
         UIPanel = _mainView;
         BtnCard = new GButton[70];
@@ -170,8 +222,10 @@ public class Player
             //BtnCard[i].SetPosition(0, 0, -1);
            
         }
-
-        cardmanager = new CardManager(20, 450,680,150,100,130, BtnCard);
+        GComponent userpanel = _mainView.GetChild("userpanel").asCom;
+        GGraph cardarea=userpanel.GetChild("n17").asGraph;
+        
+        cardmanager = new CardManager((int)(cardarea.x+userpanel.x), (int)(cardarea.y+userpanel.y)-3, (int)cardarea.width, (int)cardarea.height, 100,130, BtnCard);
     }
     private GComponent UIPanel;
 }
@@ -215,6 +269,7 @@ class MsgPlayer
     public MsgPlayer(JToken obj)
     {
         buycard = new List<Card>();
+        handcards = new List<Card>();
         userid = obj["userid"].ToString();
         ready = (bool)obj["ready"];
         money = (int)obj["money"];
@@ -225,8 +280,14 @@ class MsgPlayer
         {
             buycard.Add(new Card(i));
         }
+        JArray jsonhandcards = (JArray)JsonConvert.DeserializeObject(obj["handcards"].ToString());
+        foreach (var i in jsonhandcards)
+        {
+            handcards.Add(new Card(i));
+        }
 
     }
+    public List<Card> handcards;
     public string userid;
     public bool ready;
     public int money;
@@ -283,6 +344,7 @@ public class GamePanel : MonoBehaviour
     private GButton BuyButton;
     private GButton TestButton;
     private GButton ReadyButton;
+    private GTextField playermsg;
     
 
     private GTextField messageText;
@@ -291,7 +353,7 @@ public class GamePanel : MonoBehaviour
     private GTextField Asset;
     private string rid = RoomChoose.rid;
     private string username = Login.username;
-    private Player LocalPlayer;
+    private UserPanel userpanelobj;
 
     private MsgData olddata;
     private MsgData newdata;
@@ -305,7 +367,7 @@ public class GamePanel : MonoBehaviour
         // 找到各个控件
 
         _mainView = this.GetComponent<UIPanel>().ui;
-        LocalPlayer = new Player(_mainView);
+        userpanelobj = new UserPanel(_mainView);
         userpanel = _mainView.GetChild("userpanel").asCom;
         cards= _mainView.GetChild("cards").asCom;
    
@@ -318,9 +380,12 @@ public class GamePanel : MonoBehaviour
         ReadyButton = userpanel.GetChild("n12").asButton;
         Money = userpanel.GetChild("n10").asTextField;
         Asset = userpanel.GetChild("n14").asTextField;
+        playermsg = userpanel.GetChild("n16").asTextField;
         
 
         ReadyButton.onClick.Add(BtnReady);
+        SellButton.onClick.Add(SellCard);
+
 
         
 
@@ -338,23 +403,23 @@ public class GamePanel : MonoBehaviour
 
 
         });
-        pclient.on("onAddCard", (data) =>
-        {
-            Debug.unityLogger.Log(data);
-            JArray cards = (JArray)JsonConvert.DeserializeObject(data["cards"].ToString());
-            foreach (var i in cards)
-            {
-                LocalPlayer.cardmanager.addcards(new Card((int)i["id"], (int)i["priority"], (int)i["type"]));
-            }
-            //for (int i=0;i<3;i++)
-            //{
-            //    LocalPlayer.cardmanager.addcards(new Card(i, i,i));
-            //}
-            LocalPlayer.cardmanager.Init();
+        //pclient.on("onAddCard", (data) =>
+        //{
+        //    Debug.unityLogger.Log(data);
+        //    JArray cards = (JArray)JsonConvert.DeserializeObject(data["cards"].ToString());
+        //    foreach (var i in cards)
+        //    {
+        //        userpanelobj.cardmanager.addcards(new Card((int)i["id"], (int)i["priority"], (int)i["type"]));
+        //    }
+        //    //for (int i=0;i<3;i++)
+        //    //{
+        //    //    LocalPlayer.cardmanager.addcards(new Card(i, i,i));
+        //    //}
+        //    userpanelobj.cardmanager.Init();
             
             
          
-        });
+        //});
         pclient.on("GameNotify", (data) =>
         {
 
@@ -367,6 +432,9 @@ public class GamePanel : MonoBehaviour
         pclient.request("game.gameHandler.GetGameState", msg, null);
 
     }
+
+
+
     int GetPosition()
     {
         for(int i=0;i<newdata.playerlist.Count;i++)
@@ -383,22 +451,42 @@ public class GamePanel : MonoBehaviour
     {
         newdata = new MsgData(obj);
     }
+    
 
     void ProcessMsg()
     {
+
+
         int pos = GetPosition();
         if(pos!=-1)
         {
+            //资金和姓名显示
+            GTextField money = userpanel.GetChild("n14").asTextField;
+            GTextField name = userpanel.GetChild("n18").asTextField;
+            money.text = newdata.playerlist[pos].money.ToString();
+            name.text = newdata.playerlist[pos].userid;
             for(int i=1;i<newdata.playernum;i++)
             {
                 int realpos = (i + pos) % newdata.playernum;
                 if (realpos>=newdata.playerlist.Count)
                     continue;
-                GTextField playername = _mainView.GetChild("playername"+i.ToString()).asTextField;
-                playername.text = newdata.playerlist[realpos].userid;
+                GComponent otherplayer = _mainView.GetChild("otherplayer"+i.ToString()).asCom;
+                GTextField playername = otherplayer.GetChild("playername").asTextField;
+                playername.text = newdata.playerlist[realpos].userid+(newdata.playerlist[realpos].ready?"已准备":"未准备");
             }
-        
+            //手牌显示
+            userpanelobj.cardmanager.Clear();
+            foreach (var i in newdata.playerlist[pos].handcards)
+            {
+                userpanelobj.cardmanager.addcards(i);
+            }
+            userpanelobj.cardmanager.Init();
+
+            //显示正在售卖的牌
+
+
         }
+        //游戏开始隐藏准备按钮
         if(newdata.state=="running")
         {
             Loom.QueueOnMainThread(() => {//切换为主线程
@@ -407,7 +495,19 @@ public class GamePanel : MonoBehaviour
             });
             
         }
+        //显示主持信息
+        GComponent deskarea = _mainView.GetChild("deskarea").asCom;
+        GTextField commonmsg = deskarea.GetChild("commonmsg").asTextField;
+        if(newdata.turn=="all")
+        {
+            commonmsg.text = "请竞猜";
+        }
+        else
+        {
+            commonmsg.text="请"+newdata.turn+"出牌";
+        }
         
+
     }
     private void OnProcessGameState(JsonObject obj)
     {
@@ -426,6 +526,31 @@ public class GamePanel : MonoBehaviour
         JsonObject msg = new JsonObject();
         msg["type"] = "prepare";
         pclient.request("game.gameHandler.GameAction", msg, OnPrePare);
+    }
+    private void SellCard(EventContext context)
+    {
+
+        JsonObject msg = new JsonObject();
+        msg["type"] = "sellcard";
+        List<int> choosen= userpanelobj.cardmanager.choose;
+        
+            
+        if(choosen.Count==1||(choosen.Count==2 && 
+            userpanelobj.cardmanager.GetCard(choosen[0]).priority== userpanelobj.cardmanager.GetCard(choosen[1]).priority &&
+            ((userpanelobj.cardmanager.GetCard(choosen[0]).type==2 && userpanelobj.cardmanager.GetCard(choosen[1]).type!=2)||
+            (userpanelobj.cardmanager.GetCard(choosen[0]).type != 2 && userpanelobj.cardmanager.GetCard(choosen[1]).type == 2))))
+        {
+            msg["data"] = userpanelobj.cardmanager.choose;
+            pclient.request("game.gameHandler.GameAction", msg, null);
+            playermsg.text = "";
+        }
+        else
+        {
+            playermsg.text = "出牌不符合规则，请重新选择";
+        }
+          
+
+        
     }
 
     void GetMessage(JsonObject obj)

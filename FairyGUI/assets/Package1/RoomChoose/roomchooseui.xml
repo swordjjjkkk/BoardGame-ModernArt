@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="800,600">
+<component size="1334,750">
   <displayList>
-    <image id="n0_mggr" name="n0" src="jvtj0" fileName="CommonAsset/loginbackground.png" xy="0,0" size="800,600"/>
-    <component id="n3_mggr" name="n3" src="mggrk" fileName="RoomChoose/createroombutton.xml" xy="228,357"/>
-    <component id="n4_mggr" name="n4" src="mggrl" fileName="RoomChoose/joinroombutton.xml" xy="499,355"/>
-    <component id="n7_fkvs" name="n7" src="mggrm" fileName="RoomChoose/playercount.xml" xy="479,162"/>
-    <component id="n8_fkvs" name="n8" src="fkvs1h" fileName="RoomChoose/roomid.xml" xy="143,163"/>
-    <text id="n9_fkvs" name="n9" xy="207,76" size="481,46" fontSize="16" autoSize="none" text="加入房间只需输入房间号，创建房间需要输入房间人数，默认4人"/>
+    <image id="n0_mggr" name="n0" src="jvtj0" fileName="CommonAsset/loginbackground.png" xy="0,0" size="1334,750"/>
+    <component id="n3_mggr" name="n3" src="mggrk" fileName="RoomChoose/createroombutton.xml" xy="520,363"/>
+    <component id="n4_mggr" name="n4" src="mggrl" fileName="RoomChoose/joinroombutton.xml" xy="723,363"/>
+    <component id="n7_fkvs" name="n7" src="mggrm" fileName="RoomChoose/playercount.xml" xy="713,215"/>
+    <component id="n8_fkvs" name="n8" src="fkvs1h" fileName="RoomChoose/roomid.xml" xy="405,215"/>
+    <text id="n9_fkvs" name="n9" xy="437,86" size="495,98" fontSize="30" autoSize="none" text="加入房间只需输入房间号，创建房间需要输入房间人数，默认4人"/>
   </displayList>
 </component>

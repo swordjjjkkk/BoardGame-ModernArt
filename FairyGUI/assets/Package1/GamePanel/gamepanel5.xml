@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="800,600">
+<component size="1334,750">
   <displayList>
-    <image id="n28_ue89" name="n28" src="ue894b" fileName="CommonAsset/background.png" xy="-1,0"/>
-    <component id="n6_txz9" name="n6" src="txz9v" fileName="GamePanel/otherplayer.xml" xy="603,213" size="169,115"/>
-    <component id="n7_txz9" name="n7" src="txz9v" fileName="GamePanel/otherplayer.xml" xy="537,11" size="170,116"/>
-    <component id="n8_txz9" name="n8" src="txz9v" fileName="GamePanel/otherplayer.xml" xy="100,15" size="163,116"/>
-    <text id="n9_txz9" name="playername4" xy="615,247" size="152,63" fontSize="48" autoSize="none" text="玩家2"/>
-    <text id="n10_txz9" name="playername3" xy="545,36" size="152,63" fontSize="48" autoSize="none" text="玩家3"/>
-    <text id="n11_txz9" name="playername2" xy="110,39" size="152,63" fontSize="48" autoSize="none" text="玩家4&#xA;"/>
-    <component id="n23_fkvs" name="userpanel" src="fkvs14" fileName="UserPanel/userpanel.xml" xy="1,363"/>
-    <component id="n24_fkvs" name="n24" src="txz9v" fileName="GamePanel/otherplayer.xml" xy="41,213" size="163,116"/>
-    <text id="n25_fkvs" name="playername1" xy="56,240" size="152,63" fontSize="48" autoSize="none" text="玩家5&#xA;&#xA;"/>
-    <graph id="n26_fkvs" name="n26" xy="262,76" size="283,288" type="eclipse" fillColor="#ff00ff00"/>
-    <component id="n27_ue89" name="n27" src="fkvs1z" fileName="Card/cards.xml" xy="0,0"/>
+    <image id="n0_j8ls" name="n0" src="ue894b" fileName="CommonAsset/background.png" xy="0,0" size="1334,750"/>
+    <component id="n1_j8ls" name="userpanel" src="fkvs14" fileName="UserPanel/userpanel.xml" xy="0,517"/>
+    <component id="n2_j8ls" name="deskarea" src="txz9y" fileName="GamePanel/deskarea.xml" xy="309,192"/>
+    <component id="n3_j8ls" name="otherplayer1" src="txz9v" fileName="GamePanel/otherplayer.xml" xy="13,321"/>
+    <component id="n4_j8ls" name="otherplayer2" src="txz9v" fileName="GamePanel/otherplayer.xml" xy="17,9"/>
+    <component id="n5_j8ls" name="cards" src="fkvs1z" fileName="Card/cards.xml" xy="5,4"/>
+    <component id="n6_cin5" name="otherplayer3" src="txz9v" fileName="GamePanel/otherplayer.xml" xy="1023,10"/>
+    <component id="n7_cin5" name="otherplayer4" src="txz9v" fileName="GamePanel/otherplayer.xml" xy="1049,289"/>
   </displayList>
 </component>

@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="800,600">
+<component size="1334,750">
   <displayList>
-    <image id="n25_ue89" name="n25" src="ue894b" fileName="CommonAsset/background.png" xy="0,-1"/>
-    <component id="n6_txz9" name="n6" src="txz9v" fileName="GamePanel/otherplayer.xml" xy="632,154" size="169,115"/>
-    <component id="n7_txz9" name="n7" src="txz9v" fileName="GamePanel/otherplayer.xml" xy="290,2" size="170,116"/>
-    <component id="n8_txz9" name="n8" src="txz9v" fileName="GamePanel/otherplayer.xml" xy="3,135" size="163,116"/>
-    <text id="n9_txz9" name="playername2" xy="648,182" size="152,63" fontSize="48" autoSize="none" text="玩家2"/>
-    <text id="n10_txz9" name="playername2" xy="301,23" size="152,63" fontSize="48" autoSize="none" text="玩家3"/>
-    <text id="n11_txz9" name="playername1" xy="13,161" size="152,63" fontSize="48" autoSize="none" text="玩家4&#xA;"/>
-    <component id="n14_txz9" name="n14" src="txz9y" fileName="GamePanel/deskarea.xml" xy="178,118" size="451,250"/>
-    <component id="n23_fkvs" name="userpanel" src="fkvs14" fileName="UserPanel/userpanel.xml" xy="2,364"/>
-    <component id="n24_ue89" name="n24" src="fkvs1z" fileName="Card/cards.xml" xy="0,0"/>
+    <image id="n0_j8ls" name="n0" src="ue894b" fileName="CommonAsset/background.png" xy="0,0" size="1334,750"/>
+    <component id="n1_j8ls" name="userpanel" src="fkvs14" fileName="UserPanel/userpanel.xml" xy="0,517"/>
+    <component id="n2_j8ls" name="deskarea" src="txz9y" fileName="GamePanel/deskarea.xml" xy="309,192"/>
+    <component id="n3_j8ls" name="otherplayer1" src="txz9v" fileName="GamePanel/otherplayer.xml" xy="21,250"/>
+    <component id="n4_j8ls" name="otherplayer2" src="txz9v" fileName="GamePanel/otherplayer.xml" xy="512,0"/>
+    <component id="n5_j8ls" name="cards" src="fkvs1z" fileName="Card/cards.xml" xy="5,4"/>
+    <component id="n6_cin5" name="otherplayer3" src="txz9v" fileName="GamePanel/otherplayer.xml" xy="1035,247"/>
   </displayList>
 </component>

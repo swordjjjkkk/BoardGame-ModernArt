@@ -152,7 +152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   packageName: Package1
   componentName: roomchooseui
-  fitScreen: 3
+  fitScreen: 1
   sortingOrder: 0
   packagePath: Package1
   renderMode: 0
@@ -162,7 +162,7 @@ MonoBehaviour:
   rotation: {x: 0, y: 0, z: 0}
   fairyBatching: 0
   touchDisabled: 0
-  cachedUISize: {x: 800, y: 600}
+  cachedUISize: {x: 1334, y: 750}
   hitTestMode: 0
   setNativeChildrenOrder: 0
 --- !u!4 &96044458
@@ -174,7 +174,7 @@ Transform:
   m_GameObject: {fileID: 96044456}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.016528925, y: 0.016528925, z: 0.016528925}
+  m_LocalScale: {x: 0.018115941, y: 0.018115941, z: 0.018115941}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -273,7 +273,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1395032207}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.504132, y: -5, z: 0}
+  m_LocalPosition: {x: 11.168478, y: -5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

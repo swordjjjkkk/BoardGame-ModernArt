@@ -58,7 +58,7 @@ class Poker {
     }
 
     Shuffle() {
-        this.staticcards = staticpoker;
+        this.staticcards = JSON.parse(JSON.stringify(staticpoker));
         var pos1;
         for (var i = 1; i < 70; i++) {
 
@@ -78,6 +78,15 @@ class Player {
         this.buycard = []; //买到的画作
         this.buymoney = 0; //购买画作的钱
         this.host = false; //是否为主持
+        this.handcards = []
+    }
+
+    RemoveCard(id) {
+        for (var i in this.handcards) {
+            if (this, this.handcards[i].id == id) {
+                this.handcards.splice(i, 1);
+            }
+        }
     }
 }
 
@@ -95,11 +104,12 @@ class Room {
         //游戏状态
         this.gamestate = {
             state: "wating",// wating  running
-            playernum:parseInt(playernum),
+            playernum: parseInt(playernum),
             playerlist: [],//new Player
             turn: 'all', //uid  all
             action: 'sell',//sell buy
             sellcard: [],//new Card
+
 
         };
 
@@ -126,33 +136,46 @@ class Room {
         return null;
     }
 
+    SetNextPlayerTurn(uid) {
+        for (var i in this.gamestate.playerlist) {
+            if (this.gamestate.playerlist[i].userid == uid) {
+                this.gamestate.turn= this.gamestate.playerlist[(i + 1) % this.gamestate.playerlist.length].userid;
+                return;
+            }
+        }
+        return ;
+    }
+
     GameStart() {
         this.gamestate.state = 'running';
-        this.RoomPushMessage({route: 'onGameStart', money: "100"});
+        this.gamestate.turn = this.gamestate.playerlist[Math.floor(Math.random() * this.gamestate.playerlist.length)].userid;
         this.poker.Shuffle();
         for (var i in this.gamestate.playerlist) {
             if (this.gamestate.playernum == 3) {
-                var param = {
-                    route: 'onAddCard',
-                    cards: this.poker.staticcards.splice(0, 11)
-
-                }
-                this.PlayerPushMessage(param, this.gamestate.playerlist[i].userid, this.gamestate.playerlist[i].frontendId)
+                // var param = {
+                //     route: 'onAddCard',
+                //     cards: this.poker.staticcards.splice(0, 11)
+                //
+                // }
+                // this.PlayerPushMessage(param, this.gamestate.playerlist[i].userid, this.gamestate.playerlist[i].frontendId)
+                this.gamestate.playerlist[i].handcards = this.poker.staticcards.splice(0, 11);
 
             }
             if (this.gamestate.playernum == 4) {
-                var param = {
-                    route: 'onAddCard',
-                    cards: this.poker.staticcards.slice(0, 9)
-                }
-                this.PlayerPushMessage(param, this.gamestate.playerlist[i].userid, this.gamestate.playerlist[i].frontendId)
+                // var param = {
+                //     route: 'onAddCard',
+                //     cards: this.poker.staticcards.slice(0, 9)
+                // }
+                // this.PlayerPushMessage(param, this.gamestate.playerlist[i].userid, this.gamestate.playerlist[i].frontendId)
+                this.gamestate.playerlist[i].handcards = this.poker.staticcards.splice(0, 9);
             }
             if (this.gamestate.playernum == 5) {
-                var param = {
-                    route: 'onAddCard',
-                    cards: this.poker.staticcards.slice(0, 8)
-                }
-                this.PlayerPushMessage(param, this.gamestate.playerlist[i].userid, this.gamestate.playerlist[i].frontendId)
+                // var param = {
+                //     route: 'onAddCard',
+                //     cards: this.poker.staticcards.slice(0, 8)
+                // }
+                // this.PlayerPushMessage(param, this.gamestate.playerlist[i].userid, this.gamestate.playerlist[i].frontendId)
+                this.gamestate.playerlist[i].handcards = this.poker.staticcards.splice(0, 8);
             }
         }
     }
@@ -164,7 +187,7 @@ class Room {
                 temp++;
             }
         }
-        //this.GameStart();
+        this.GameStart();
         if (temp == this.gamestate.playernum && this.gamestate.state == 'wating') {
             this.GameStart();
         }
@@ -237,18 +260,32 @@ handler.GameAction = function (msg, session, next) {
     next(null, {
         content: 'received'
     });
-    switch (msg.type) {
-        case "prepare":
-            var room = GetRoom(session.get('rid'));
-            var player = room.GetPlayer(session.uid);
-            player.ready = true;
-            room.CheckReady();
-            break;
-        default:
-            break;
+    var room = GetRoom(session.get('rid'));
+    var player = room.GetPlayer(session.uid);
+    if (room.gamestate.turn == session.uid || room.gamestate.turn == "all") {
+        switch (msg.type) {
+            case "prepare":
 
+
+                player.ready = true;
+                room.CheckReady();
+                break;
+            case "sellcard":
+
+
+                for (var i in msg["data"]) {
+                    room.gamestate.sellcard.push(staticpoker[msg["data"][i]]);
+                    player.RemoveCard(msg["data"][i]);
+                }
+                room.SetNextPlayerTurn(session.uid);
+                break;
+            default:
+                break;
+
+        }
+        GetRoom(session.get('rid')).GameSynData();
     }
-    GetRoom(session.get('rid')).GameSynData();
+
 
 }
 
