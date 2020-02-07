@@ -78,7 +78,8 @@ class Player {
         this.buycard = []; //买到的画作
         this.buymoney = 0; //购买画作的钱
         this.host = false; //是否为主持
-        this.handcards = []
+        this.handcards = [];
+        this.actionlist = ["prepare"];
     }
 
     RemoveCard(id) {
@@ -136,19 +137,24 @@ class Room {
         return null;
     }
 
-    SetNextPlayerTurn(uid) {
-        for (var i in this.gamestate.playerlist) {
+    SetNextPlayerTurn(uid, actionlist) {
+        for (var i=0;i<this.gamestate.playerlist.length;i++) {
             if (this.gamestate.playerlist[i].userid == uid) {
-                this.gamestate.turn= this.gamestate.playerlist[(i + 1) % this.gamestate.playerlist.length].userid;
+                var pos = (i + 1) % this.gamestate.playerlist.length;
+                this.gamestate.turn = this.gamestate.playerlist[pos].userid;
+                this.gamestate.playerlist[pos].actionlist = actionlist;
                 return;
             }
         }
-        return ;
+        return;
     }
 
     GameStart() {
+
         this.gamestate.state = 'running';
-        this.gamestate.turn = this.gamestate.playerlist[Math.floor(Math.random() * this.gamestate.playerlist.length)].userid;
+        var pos = Math.floor(Math.random() * this.gamestate.playerlist.length);
+        this.gamestate.turn = this.gamestate.playerlist[pos].userid;
+        this.gamestate.playerlist[pos].actionlist.push("sellcard");
         this.poker.Shuffle();
         for (var i in this.gamestate.playerlist) {
             if (this.gamestate.playernum == 3) {
@@ -224,8 +230,17 @@ class Room {
                 console.error('set rid for session service failed! error is : %j', err.stack);
             }
         });
+        var flag = false;
+        for (var i in this.gamestate.playerlist) {
+            if (this.gamestate.playerlist[i].uid == session.uid){
+                flag = true;
+            }
 
-        this.gamestate.playerlist.push(new Player(session));
+        }
+        if (!flag){
+            this.gamestate.playerlist.push(new Player(session));
+        }
+
         next(null, {
             result: 'success',
             playernum: this.gamestate.playernum
@@ -262,7 +277,8 @@ handler.GameAction = function (msg, session, next) {
     });
     var room = GetRoom(session.get('rid'));
     var player = room.GetPlayer(session.uid);
-    if (room.gamestate.turn == session.uid || room.gamestate.turn == "all") {
+    if ((room.gamestate.turn == session.uid || room.gamestate.turn == "all") && (player.actionlist.indexOf(msg.type) != -1)) {
+        player.actionlist.splice(0, player.actionlist.length);  //执行一个action就清空actionlist，然后根据具体代码来决定能否执行其他action
         switch (msg.type) {
             case "prepare":
 
@@ -277,18 +293,45 @@ handler.GameAction = function (msg, session, next) {
                     room.gamestate.sellcard.push(staticpoker[msg["data"][i]]);
                     player.RemoveCard(msg["data"][i]);
                 }
-                room.SetNextPlayerTurn(session.uid);
+                room.SetNextPlayerTurn(session.uid, ["buycard"]);
+                break;
+            case "buycard":
+                player.buymoney = parseInt(msg["data"]);
+                room.SetNextPlayerTurn(session.uid, ["deal"]);
+                break;
+            case "deal":
+                var pos;
+                pos=0;
+                for(var i in room.gamestate.playerlist)
+                {
+                    if(room.gamestate.playerlist[i].buymoney>room.gamestate.playerlist[pos].buymoney)
+                    {
+                        pos=i;
+                    }
+                }
+                room.gamestate.playerlist[pos].money-=room.gamestate.playerlist[pos].buymoney;
+                player.money+=room.gamestate.playerlist[pos].buymoney;
+                for(var i in room.gamestate.sellcard)
+                {
+                    room.gamestate.playerlist[pos].buycard.push(room.gamestate.sellcard[i]);
+                }
+                room.gamestate.sellcard=[];
+                room.SetNextPlayerTurn(session.uid,["sellcard"]);
                 break;
             default:
                 break;
 
         }
-        GetRoom(session.get('rid')).GameSynData();
+        room.GameSynData();
     }
 
 
 }
-
+handler.GetPlayerNum = function (msg, session, next) {
+    next(null, {
+        playernum: GetRoom(session.get('rid')).gamestate.playernum
+    });
+}
 
 handler.GetGameState = function (msg, session, next) {
     next(null, {

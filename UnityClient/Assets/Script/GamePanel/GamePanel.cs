@@ -8,340 +8,22 @@ using System;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Threading;
-
-public class Card
-{
-    public Card(Card c)
-    {
-        this.id = c.id;
-        this.priority = c.priority;
-        this.type = c.type;
-    }
-    public Card(int id,int priority,int type)
-    {
-        this.id = id;
-        this.priority = priority;
-        this.type = type;
-    }
-
-    public Card(JToken i)
-    {
-        id = (int)(i["id"]);
-        priority = (int)(i["priority"]);
-        type = (int)(i["type"]);
-        
-    }
-
-    public int id;
-    public int priority;
-    public int type;
+using Assets.Script.GamePanel;
 
 
-    public static bool operator ==(Card first, Card second)
-    {
-        return first.id == second.id ? true : false;
-    }
-    public static bool operator !=(Card first, Card second)
-    {
-        return first.id != second.id ? true : false;
-    }
-    public bool Equals(Card second)
-    {
-        return id == second.id ? true : false;
-    }
-}
-public class CardManager
-{
-    public CardManager(int x,int y,int width,int height,int cardwidth,int cardheight, GButton[] BtnCardList)
-    {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-        this.cardwidth = cardwidth;
-        this.cardheight = cardheight;
-        this.BtnCardList = BtnCardList ;
-        choose = new List<int>();
-      
-        cards = new List<Card>();
-        
-        for (int i=0;i<BtnCardList.Length;i++)
-        {
-            BtnCardList[i].data = i;
-            BtnCardList[i].onClick.Add(CardClicked);
-        }
-   
-    }
-    int x;
-    int y;
-    int width;
-    int height;
-    int cardwidth;
-    int cardheight;
-    GComponent poker;
-    GButton[] BtnCardList;
 
-    public Card GetCard(int id)
-    {
-        for(int i = 0; i < cards.Count; i++)
-        {
-            if(cards[i].id==id)
-            {
-                return cards[i];
-            }
-        }
-        return null;
-    }
-    public List<int> choose;
-
-    private List<Card> cards;
-
-    public void addcards(Card newcard)
-    {
-        cards.Add(newcard);
-    }
-    public void Clear()
-    {
-        cards.Clear();
-    }
- 
- 
-    public void deletecards(Card oldcard)
-    {
-        foreach(Card i in cards)
-        {
-            if(i==oldcard)
-            {
-                cards.Remove(i);
-            }
-        }
-    }
-    public void SetPosition(int x ,int y,int index)
-    {
-        Loom.QueueOnMainThread(() => {//切换为主线程
-
-            BtnCardList[index].visible = true;
-            BtnCardList[index].SetPosition(x, y, 0);
-        });
-        
-    }
-    public void Init()
-    {
-        
-        cards.Sort((a, b) =>
-        {
-            return a.id-b.id;
-        });
-        int totalwidth = ((this.cards.Count + 1) * (this.cardwidth / 2));
-        int X = (this.width - totalwidth) / 2 + this.x;
-        int Y = (this.y + this.height - this.cardheight);
-        for(int i = 0; i < cards.Count; i++)
-        {
-            if(choose.Contains(cards[i].id))
-            {
-                SetPosition(X, Y-20, cards[i].id);
-            }
-            else
-            {
-                SetPosition(X, Y, cards[i].id);
-            }
-            
-            X += (this.cardwidth / 2);
-        }
-    
-    }
-
-
-    void CardClicked(EventContext context)
-    {
-
-        
-        int index = (int)((GObject)context.sender).data;
-        //BtnCardList[index].SetPosition(0, 0, 0);
-        if(choose.Contains(index))
-        {
-            choose.Remove(index);
-        }
-        else
-        {
-            choose.Add(index);
-        }
-        //if(choose[0]==-1&&choose[1]==-1)
-        //{
-        //    choose[0] = index;
-        //}
-        //else if(choose[0]!=-1&&choose[1]!=-1)
-        //{
-        //    choose[0] = -1;
-        //    choose[1] = -1;
-        //    choose[0] = index;
-        //}
-        //else
-        //{
-        //    if(cards[choose[0]].type==2 && cards[choose[0]].priority==cards[index].priority && cards[index].type!=2)
-        //    {
-        //        choose[1] = index;
-        //    }
-        //    else
-        //    {
-
-        //    }
-        //}
-        //if(choosen==index)
-        //{
-        //    choosen = -1;
-        //}
-        //else
-        //{
-        //    BtnCardList[index].SetPosition(BtnCardList[index].position.x, BtnCardList[index].position.y - 20, BtnCardList[index].position.z);
-        //    choosen = index;
-        //}
-        
-        //this.choosen = index;
-
-
-        this.Init();
-
-    }
-}
-public class UserPanel
-{
-    public CardManager cardmanager;
-    public GButton[] BtnCard;
-    public UserPanel(GComponent _mainView)
-    {
-        UIPanel = _mainView;
-        BtnCard = new GButton[70];
-        GComponent cards;
-        cards = _mainView.GetChild("cards").asCom;
-
-        for (int i = 0; i < BtnCard.Length; i++)
-        {
-            BtnCard[i]=(cards.GetChild("card" + i.ToString()).asButton); 
-            //BtnCard[i].visible = false;
-            //BtnCard[i].SetPosition(0, 0, -1);
-           
-        }
-        GComponent userpanel = _mainView.GetChild("userpanel").asCom;
-        GGraph cardarea=userpanel.GetChild("n17").asGraph;
-        
-        cardmanager = new CardManager((int)(cardarea.x+userpanel.x), (int)(cardarea.y+userpanel.y)-3, (int)cardarea.width, (int)cardarea.height, 100,130, BtnCard);
-    }
-    private GComponent UIPanel;
-}
-
-//this.gamestate = {
-//            state: "wating",// wating  running
-//            playernum:parseInt(playernum),
-//            playerlist: [],//new Player
-//            turn: 'all', //uid  all
-//            action: 'sell',//sell buy
-//            sellcard: [],//new Card
-
-//        };
-
-
-//class Card
-//{
-//    constructor(id, priority, type)
-//    {
-//        this.id = id;
-//        this.priority = priority;
-//        this.type = type;
-//    }
-//}
-//class Player
-//{
-//    constructor(session)
-//    {
-//        this.userid = session.uid;
-//        this.frontendId = session.frontendId;
-//        this.ready = false;
-//        this.money = 100; //资金
-//        this.buycard = []; //买到的画作
-//        this.buymoney = 0; //购买画作的钱
-//        this.host = false; //是否为主持
-//    }
-//}
-
-class MsgPlayer
-{
-    public MsgPlayer(JToken obj)
-    {
-        buycard = new List<Card>();
-        handcards = new List<Card>();
-        userid = obj["userid"].ToString();
-        ready = (bool)obj["ready"];
-        money = (int)obj["money"];
-        buymoney = (int)obj["buymoney"];
-        host = (bool)obj["host"];
-        JArray jsonbuycard = (JArray)JsonConvert.DeserializeObject(obj["buycard"].ToString());
-        foreach (var i in jsonbuycard)
-        {
-            buycard.Add(new Card(i));
-        }
-        JArray jsonhandcards = (JArray)JsonConvert.DeserializeObject(obj["handcards"].ToString());
-        foreach (var i in jsonhandcards)
-        {
-            handcards.Add(new Card(i));
-        }
-
-    }
-    public List<Card> handcards;
-    public string userid;
-    public bool ready;
-    public int money;
-    public List<Card> buycard;
-    public int buymoney;
-    public bool host;
-  
-    
-}
-
-
-class MsgData
-{
-    public MsgData(JToken obj)
-    {
-        playerlist = new List<MsgPlayer>();
-        sellcard = new List<Card>();
-        state = obj["state"].ToString();
-        playernum = (int)(obj["playernum"]);
-        turn = obj["turn"].ToString();
-        action = obj["action"].ToString();
-        JArray jsonplayerlist = (JArray)JsonConvert.DeserializeObject(obj["playerlist"].ToString());
-        foreach(var i in jsonplayerlist)
-        {
-            playerlist.Add(new MsgPlayer(i));
-        }
-
-        JArray jsonsellcard = (JArray)JsonConvert.DeserializeObject(obj["sellcard"].ToString());
-        foreach (var i in jsonsellcard)
-        {
-            sellcard.Add(new Card(i));
-        }
-
-
-    }
-    public string state;
-    public int playernum;
-    public List<MsgPlayer> playerlist;
-    public string turn;
-    public string action;
-    public List<Card> sellcard;
-
-
-}
 public class GamePanel : MonoBehaviour
 {
     private PomeloClient pclient = Login.pomeloClient;
     private GComponent _mainView;
     private GComponent userpanel;
+    private GComponent deskpanel;
     private GComponent cards;
     private GComponent _message;
     private GButton sendMessageButton;
     private GButton SellButton;
     private GButton BuyButton;
+    private GButton DealButton;
     private GButton TestButton;
     private GButton ReadyButton;
     private GTextField playermsg;
@@ -353,10 +35,17 @@ public class GamePanel : MonoBehaviour
     private GTextField Asset;
     private string rid = RoomChoose.rid;
     private string username = Login.username;
-    private UserPanel userpanelobj;
+
+
+    private UserCardRender usercardrender;
+    private CardRender sellcardrender;
+    private CardRender localbuycardrender;
+
+    private List<CardRender> buycardrender;
 
     private MsgData olddata;
     private MsgData newdata;
+    private GButton[] BtnCard;
 
     // Start is called before the first frame update
     void Start()
@@ -367,14 +56,15 @@ public class GamePanel : MonoBehaviour
         // 找到各个控件
 
         _mainView = this.GetComponent<UIPanel>().ui;
-        userpanelobj = new UserPanel(_mainView);
+    
         userpanel = _mainView.GetChild("userpanel").asCom;
+        deskpanel = _mainView.GetChild("deskarea").asCom;
         cards= _mainView.GetChild("cards").asCom;
-   
 
 
 
 
+        DealButton = userpanel.GetChild("deal").asButton;
         SellButton = userpanel.GetChild("n2").asButton;
         BuyButton = userpanel.GetChild("n11").asButton;
         ReadyButton = userpanel.GetChild("n12").asButton;
@@ -385,15 +75,42 @@ public class GamePanel : MonoBehaviour
 
         ReadyButton.onClick.Add(BtnReady);
         SellButton.onClick.Add(SellCard);
+        BuyButton.onClick.Add(BuyCard);
+        DealButton.onClick.Add(DealCard);
+        buycardrender = new List<CardRender>();
+
+        //初始化CardRender
+
+        BtnCard = new GButton[70];
 
 
-        
 
-        //sendMessageButton.onClick.Add(BtnSendMessage);
-        //pclient.on("onChat", (data)=>
-        //{
-        //    chatText.text += data["msg"] + "\n";
-        //});
+        for (int i = 0; i < BtnCard.Length; i++)
+        {
+            BtnCard[i] = (cards.GetChild("card" + i.ToString()).asButton);
+    
+
+        }
+        GGraph sellarea = deskpanel.GetChild("n13").asGraph;
+        GGraph cardarea = userpanel.GetChild("n17").asGraph;
+        GGraph localbuyarea = userpanel.GetChild("n15").asGraph;
+        usercardrender = new UserCardRender((int)(cardarea.x + userpanel.x), (int)(cardarea.y + userpanel.y) - 3, (int)cardarea.width, (int)cardarea.height, 100, 130, BtnCard);
+        sellcardrender = new CardRender((int)(sellarea.x + deskpanel.x), (int)(sellarea.y + deskpanel.y) - 3, (int)sellarea.width, (int)sellarea.height, 100, 130, BtnCard);
+        localbuycardrender = new CardRender((int)(localbuyarea.x + userpanel.x), (int)(localbuyarea.y + userpanel.y) - 3, (int)localbuyarea.width, (int)localbuyarea.height, 30, 40, BtnCard);
+
+        JsonObject msg = new JsonObject();
+        pclient.request("game.gameHandler.GetPlayerNum", msg, (data1)=>
+        {
+            JObject jobject = (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(data1.ToString());
+            int playernum = (int)(jobject["playernum"]);
+            for(int i=1;i<playernum;i++)
+            {
+                GComponent otherplayer = _mainView.GetChild("otherplayer" + i.ToString()).asCom;
+                GGraph otherbuyarea = otherplayer.GetChild("n3").asGraph;
+                buycardrender.Add(new CardRender((int)(otherbuyarea.x + otherplayer.x), (int)(otherbuyarea.y + otherplayer.y) - 3, (int)otherbuyarea.width, (int)otherbuyarea.height, 30, 40, BtnCard));
+            }
+        });
+
         pclient.on("onGameStart", (data) =>
         {
             
@@ -403,23 +120,10 @@ public class GamePanel : MonoBehaviour
 
 
         });
-        //pclient.on("onAddCard", (data) =>
-        //{
-        //    Debug.unityLogger.Log(data);
-        //    JArray cards = (JArray)JsonConvert.DeserializeObject(data["cards"].ToString());
-        //    foreach (var i in cards)
-        //    {
-        //        userpanelobj.cardmanager.addcards(new Card((int)i["id"], (int)i["priority"], (int)i["type"]));
-        //    }
-        //    //for (int i=0;i<3;i++)
-        //    //{
-        //    //    LocalPlayer.cardmanager.addcards(new Card(i, i,i));
-        //    //}
-        //    userpanelobj.cardmanager.Init();
-            
+   
             
          
-        //});
+
         pclient.on("GameNotify", (data) =>
         {
 
@@ -428,8 +132,8 @@ public class GamePanel : MonoBehaviour
 
 
         });
-        JsonObject msg = new JsonObject();
-        pclient.request("game.gameHandler.GetGameState", msg, null);
+        JsonObject msg2 = new JsonObject();
+        pclient.request("game.gameHandler.GetGameState", msg2, null);
 
     }
 
@@ -475,15 +179,20 @@ public class GamePanel : MonoBehaviour
                 playername.text = newdata.playerlist[realpos].userid+(newdata.playerlist[realpos].ready?"已准备":"未准备");
             }
             //手牌显示
-            userpanelobj.cardmanager.Clear();
+            usercardrender.Clear();
             foreach (var i in newdata.playerlist[pos].handcards)
             {
-                userpanelobj.cardmanager.addcards(i);
+                usercardrender.addcards(i);
             }
-            userpanelobj.cardmanager.Init();
+            usercardrender.Init();
 
             //显示正在售卖的牌
-
+            sellcardrender.Clear();
+            foreach(var i in newdata.sellcard)
+            {
+                sellcardrender.addcards(i);
+            }
+            sellcardrender.Init();
 
         }
         //游戏开始隐藏准备按钮
@@ -506,7 +215,65 @@ public class GamePanel : MonoBehaviour
         {
             commonmsg.text="请"+newdata.turn+"出牌";
         }
+
+        //显示成交按钮
+        if (newdata.playerlist[pos].actionlist.Contains("deal"))
+        {
+            Loom.QueueOnMainThread(() => {//切换为主线程
+
+                DealButton.visible = true;
+            });
+
+        }
+        else
+        {
+            Loom.QueueOnMainThread(() => {//切换为主线程
+
+                DealButton.visible = false;
+            });
+        }
+        //显示购买到的牌
+        localbuycardrender.Clear();
+        foreach(var i in buycardrender)
+        {
+            i.Clear();
+        }
+      
+        for(int i=0;i<newdata.playerlist.Count;i++)
+        {
+            
+            for (int j = 0; j < newdata.playerlist[i].buycard.Count; j++)
+            {
+                GImage temp = BtnCard[newdata.playerlist[i].buycard[j].id].GetChild("n1").asImage;
+                Loom.QueueOnMainThread(() => {//切换为主线程
+                    temp.visible = false;
+                });
+
+
+                if (i == pos)
+                {
+                    localbuycardrender.addcards(newdata.playerlist[i].buycard[j]);
+                    localbuycardrender.Init();
+                }
+                else
+                {
+                    if(i<pos)
+                    {
+                        buycardrender[i + newdata.playernum - pos-1].addcards(newdata.playerlist[i].buycard[j]);
+                        buycardrender[i + newdata.playernum - pos-1].Init();
+                    }
+                    else
+                    {
+                        buycardrender[i - pos-1].addcards(newdata.playerlist[i].buycard[j]);
+                        buycardrender[i - pos-1].Init();
+                    }
+                    
+                }
+            }
+            
+        }
         
+
 
     }
     private void OnProcessGameState(JsonObject obj)
@@ -520,6 +287,12 @@ public class GamePanel : MonoBehaviour
 
 
     }
+    private void DealCard(EventContext context)
+    {
+        JsonObject msg = new JsonObject();
+        msg["type"] = "deal";
+        pclient.request("game.gameHandler.GameAction", msg, null);
+    }
 
     void BtnReady()
     {
@@ -532,15 +305,15 @@ public class GamePanel : MonoBehaviour
 
         JsonObject msg = new JsonObject();
         msg["type"] = "sellcard";
-        List<int> choosen= userpanelobj.cardmanager.choose;
+        List<int> choosen= usercardrender.choose;
         
             
         if(choosen.Count==1||(choosen.Count==2 && 
-            userpanelobj.cardmanager.GetCard(choosen[0]).priority== userpanelobj.cardmanager.GetCard(choosen[1]).priority &&
-            ((userpanelobj.cardmanager.GetCard(choosen[0]).type==2 && userpanelobj.cardmanager.GetCard(choosen[1]).type!=2)||
-            (userpanelobj.cardmanager.GetCard(choosen[0]).type != 2 && userpanelobj.cardmanager.GetCard(choosen[1]).type == 2))))
+            usercardrender.GetCard(choosen[0]).priority== usercardrender.GetCard(choosen[1]).priority &&
+            ((usercardrender.GetCard(choosen[0]).type==2 && usercardrender.GetCard(choosen[1]).type!=2)||
+            (usercardrender.GetCard(choosen[0]).type != 2 && usercardrender.GetCard(choosen[1]).type == 2))))
         {
-            msg["data"] = userpanelobj.cardmanager.choose;
+            msg["data"] = usercardrender.choose;
             pclient.request("game.gameHandler.GameAction", msg, null);
             playermsg.text = "";
         }
@@ -551,6 +324,21 @@ public class GamePanel : MonoBehaviour
           
 
         
+    }
+
+    private void BuyCard(EventContext context)
+    {
+        JsonObject msg = new JsonObject();
+        msg["type"] = "buycard";
+        msg["data"] = Money.text;
+        pclient.request("game.gameHandler.GameAction", msg, null);
+    }
+    
+    void OnPrePare(JsonObject obj)
+    {
+
+        ReadyButton.color = new Color(255, 0, 255);
+
     }
 
     void GetMessage(JsonObject obj)
@@ -570,12 +358,7 @@ public class GamePanel : MonoBehaviour
 
     }
 
-    void OnPrePare(JsonObject obj)
-    {
-        
-        ReadyButton.color = new Color(255, 0, 255);
-  
-    }
+
 
     void OnSendMessage(JsonObject obj)
     {

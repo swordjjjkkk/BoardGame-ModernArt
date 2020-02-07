@@ -33,11 +33,11 @@
     <component id="fkvs1c" name="ready.xml" path="/UserPanel/"/>
     <component id="fkvs1h" name="roomid.xml" path="/RoomChoose/"/>
     <component id="fkvs1z" name="cards.xml" path="/Card/"/>
-    <image id="fkvs23" name="轮流.png" path="/Card/"/>
-    <image id="fkvs24" name="公开.png" path="/Card/"/>
-    <image id="fkvs25" name="联合.png" path="/Card/"/>
-    <image id="fkvs26" name="秘密.png" path="/Card/"/>
-    <image id="fkvs27" name="一口价.png" path="/Card/"/>
+    <image id="fkvs23" name="轮流.png" path="/Card/" scale="tile"/>
+    <image id="fkvs24" name="公开.png" path="/Card/" scale="tile"/>
+    <image id="fkvs25" name="联合.png" path="/Card/" scale="tile"/>
+    <image id="fkvs26" name="秘密.png" path="/Card/" scale="tile"/>
+    <image id="fkvs27" name="一口价.png" path="/Card/" scale="tile"/>
     <image id="ue8928" name="灰色.png" path="/Card/"/>
     <image id="ue8929" name="黄色.png" path="/Card/"/>
     <image id="ue892a" name="绿色.png" path="/Card/"/>
@@ -117,6 +117,7 @@
     <component id="j8ls4c" name="gamepanel3.xml" path="/GamePanel/" exported="true"/>
     <component id="cin54d" name="gamepanel4.xml" path="/GamePanel/" exported="true"/>
     <component id="cin54e" name="gamepanel5.xml" path="/GamePanel/" exported="true"/>
+    <component id="iega4g" name="deal.xml" path="/UserPanel/"/>
   </resources>
   <publish name="Package1" path="D:\BoardGame-ModernArt\UnityClient\Assets\Resources"/>
 </packageDescription>

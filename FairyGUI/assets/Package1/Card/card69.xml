@@ -5,7 +5,9 @@
     <image id="n0_ue89" name="n0" src="ue8928" fileName="Card/灰色.png" xy="0,0">
       <relation target="" sidePair="width-width,height-height"/>
     </image>
-    <image id="n1_ue89" name="n1" src="fkvs23" fileName="Card/轮流.png" xy="5,9"/>
+    <image id="n1_ue89" name="n1" src="fkvs23" fileName="Card/轮流.png" xy="5,9">
+      <gearSize controller="button" default="40,40,1,1" tween="true"/>
+    </image>
   </displayList>
   <Button/>
 </component>
