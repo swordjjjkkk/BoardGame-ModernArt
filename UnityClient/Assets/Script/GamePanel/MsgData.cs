@@ -18,6 +18,7 @@ namespace Assets.Script.GamePanel
             playernum = (int)(obj["playernum"]);
             turn = obj["turn"].ToString();
             action = obj["action"].ToString();
+            commonmsg = obj["commonmsg"].ToString();
             JArray jsonplayerlist = (JArray)JsonConvert.DeserializeObject(obj["playerlist"].ToString());
             playerlist.Clear();
             foreach (var i in jsonplayerlist)
@@ -40,6 +41,7 @@ namespace Assets.Script.GamePanel
         public string turn;
         public string action;
         public List<MsgCard> sellcard;
+        public string commonmsg;
 
     }
 }

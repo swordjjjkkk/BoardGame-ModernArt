@@ -20,6 +20,7 @@ namespace Assets.Script.GamePanel
             money = (int)obj["money"];
             buymoney = (int)obj["buymoney"];
             host = (bool)obj["host"];
+            playermsg = obj["playermsg"].ToString();
             JArray jsonbuycard = (JArray)JsonConvert.DeserializeObject(obj["buycard"].ToString());
             buycard.Clear();
             foreach (var i in jsonbuycard)
@@ -48,5 +49,6 @@ namespace Assets.Script.GamePanel
         public int buymoney;
         public bool host;
         public List<string> actionlist;
+        public string playermsg;
     }
 }

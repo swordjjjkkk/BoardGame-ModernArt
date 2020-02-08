@@ -185,6 +185,21 @@ public class GamePanel : MonoBehaviour
                 usercardrender.addcards(i);
             }
             usercardrender.Init();
+            for(int i=1;i<newdata.playerlist.Count;i++)
+            {
+                int otherpos = (i + pos) % newdata.playerlist.Count;
+                GComponent otherplayer = _mainView.GetChild("otherplayer" + i.ToString()).asCom;
+                foreach(var j in newdata.playerlist[otherpos].handcards)
+                {
+                    int temp = j.id;
+                    Loom.QueueOnMainThread(() => {//切换为主线程
+
+                        BtnCard[temp].SetPosition(otherplayer.x, otherplayer.y, 0);
+                    });
+                    
+                }
+
+            }
 
             //显示正在售卖的牌
             sellcardrender.Clear();
@@ -194,6 +209,17 @@ public class GamePanel : MonoBehaviour
             }
             sellcardrender.Init();
 
+            //显示提示信息
+            GComponent deskarea = _mainView.GetChild("deskarea").asCom;
+            GTextField commonmsg = deskarea.GetChild("commonmsg").asTextField;
+            commonmsg.text = newdata.commonmsg;
+            GTextField localmsg = userpanel.GetChild("n16").asTextField;
+            localmsg.text = newdata.playerlist[pos].playermsg;
+            for(int i=1;i<newdata.playerlist.Count;i++)
+            {
+                GTextField othermsg = _mainView.GetChild("otherplayer" + i.ToString()).asCom.GetChild("n4").asTextField;
+                othermsg.text = newdata.playerlist[(i + pos) % newdata.playerlist.Count].playermsg;
+            }
         }
         //游戏开始隐藏准备按钮
         if(newdata.state=="running")
@@ -204,20 +230,11 @@ public class GamePanel : MonoBehaviour
             });
             
         }
-        //显示主持信息
-        GComponent deskarea = _mainView.GetChild("deskarea").asCom;
-        GTextField commonmsg = deskarea.GetChild("commonmsg").asTextField;
-        if(newdata.turn=="all")
-        {
-            commonmsg.text = "请竞猜";
-        }
-        else
-        {
-            commonmsg.text="请"+newdata.turn+"出牌";
-        }
+        
+        
 
         //显示成交按钮
-        if (newdata.playerlist[pos].actionlist.Contains("deal"))
+        if (newdata.playerlist[pos].host)
         {
             Loom.QueueOnMainThread(() => {//切换为主线程
 
@@ -316,6 +333,8 @@ public class GamePanel : MonoBehaviour
             msg["data"] = usercardrender.choose;
             pclient.request("game.gameHandler.GameAction", msg, null);
             playermsg.text = "";
+            usercardrender.choose.Clear();
+            usercardrender.Init();
         }
         else
         {
