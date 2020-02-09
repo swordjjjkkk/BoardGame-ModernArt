@@ -20,6 +20,7 @@ namespace Assets.Script.GamePanel
             money = (int)obj["money"];
             buymoney = (int)obj["buymoney"];
             host = (bool)obj["host"];
+            buyover = (bool)obj["buyover"];
             playermsg = obj["playermsg"].ToString();
             JArray jsonbuycard = (JArray)JsonConvert.DeserializeObject(obj["buycard"].ToString());
             buycard.Clear();
@@ -50,5 +51,6 @@ namespace Assets.Script.GamePanel
         public bool host;
         public List<string> actionlist;
         public string playermsg;
+        public bool buyover;
     }
 }

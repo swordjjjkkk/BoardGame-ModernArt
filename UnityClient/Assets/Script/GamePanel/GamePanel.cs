@@ -25,6 +25,10 @@ public class GamePanel : MonoBehaviour
     private GButton BuyButton;
     private GButton DealButton;
     private GButton TestButton;
+    private GButton AgreeButton;
+    private GButton DisAgreeButton;
+    private GButton UnionButton;
+    private GButton GiveupButton;
     private GButton ReadyButton;
     private GTextField playermsg;
     
@@ -63,9 +67,12 @@ public class GamePanel : MonoBehaviour
 
 
 
-
+        AgreeButton = userpanel.GetChild("agree").asButton;
+        DisAgreeButton = userpanel.GetChild("disagree").asButton;
         DealButton = userpanel.GetChild("deal").asButton;
         SellButton = userpanel.GetChild("n2").asButton;
+        UnionButton = userpanel.GetChild("union").asButton;
+        GiveupButton = userpanel.GetChild("giveup").asButton;
         BuyButton = userpanel.GetChild("n11").asButton;
         ReadyButton = userpanel.GetChild("n12").asButton;
         Money = userpanel.GetChild("n10").asTextField;
@@ -77,6 +84,11 @@ public class GamePanel : MonoBehaviour
         SellButton.onClick.Add(SellCard);
         BuyButton.onClick.Add(BuyCard);
         DealButton.onClick.Add(DealCard);
+        AgreeButton.onClick.Add(BuyChooseAgree);
+        DisAgreeButton.onClick.Add(BuyChooseDisAgree);
+        UnionButton.onClick.Add(UnionAgree);
+        GiveupButton.onClick.Add(UnionDisagree);
+
         buycardrender = new List<CardRender>();
 
         //初始化CardRender
@@ -220,9 +232,45 @@ public class GamePanel : MonoBehaviour
                 GTextField othermsg = _mainView.GetChild("otherplayer" + i.ToString()).asCom.GetChild("n4").asTextField;
                 othermsg.text = newdata.playerlist[(i + pos) % newdata.playerlist.Count].playermsg;
             }
+
+            //显示购买钱数
+            GTextInput localbuymoney = userpanel.GetChild("n10").asTextInput;
+            string tempstring = newdata.playerlist[pos].buymoney.ToString();
+
+            Loom.QueueOnMainThread(() => {//切换为主线程
+
+                localbuymoney.text = tempstring;
+            });
+
+            //显示一口价选择按钮
+            if (newdata.playerlist[pos].actionlist.Contains("choose"))
+            {
+                Loom.QueueOnMainThread(() => {//切换为主线程
+
+                    AgreeButton.visible = true;
+                    DisAgreeButton.visible = true;
+                });
+                if (newdata.playerlist[pos].host)
+                {
+                    Loom.QueueOnMainThread(() => {//切换为主线程
+
+                        
+                        DisAgreeButton.visible = false;
+                    });
+                }
+            }
+            else
+            {
+                Loom.QueueOnMainThread(() => {//切换为主线程
+
+                    AgreeButton.visible = false;
+                    DisAgreeButton.visible = false;
+                });
+            }
+
         }
         //游戏开始隐藏准备按钮
-        if(newdata.state=="running")
+        if (newdata.state=="running")
         {
             Loom.QueueOnMainThread(() => {//切换为主线程
 
@@ -230,11 +278,39 @@ public class GamePanel : MonoBehaviour
             });
             
         }
-        
-        
+
+        //显示联合选择按钮
+        if (newdata.playerlist[pos].actionlist.Contains("chooseunion"))
+        {
+            
+            if (newdata.playerlist[pos].host)
+            {
+                Loom.QueueOnMainThread(() => {//切换为主线程
+
+                    UnionButton.visible = false;
+                    GiveupButton.visible = true;
+                });
+            }
+            else
+            {
+                Loom.QueueOnMainThread(() => {//切换为主线程
+
+                    UnionButton.visible = true;
+                    GiveupButton.visible = true;
+                });
+            }
+
+        }
+        else
+        {
+            Loom.QueueOnMainThread(() => {//切换为主线程
+                UnionButton.visible = false;
+                GiveupButton.visible = false;
+            });
+        }
 
         //显示成交按钮
-        if (newdata.playerlist[pos].host)
+        if (newdata.playerlist[pos].actionlist.Contains("deal"))
         {
             Loom.QueueOnMainThread(() => {//切换为主线程
 
@@ -249,6 +325,9 @@ public class GamePanel : MonoBehaviour
                 DealButton.visible = false;
             });
         }
+
+        
+
         //显示购买到的牌
         localbuycardrender.Clear();
         foreach(var i in buycardrender)
@@ -317,20 +396,41 @@ public class GamePanel : MonoBehaviour
         msg["type"] = "prepare";
         pclient.request("game.gameHandler.GameAction", msg, OnPrePare);
     }
+    int GetSellType()
+    {
+        int type = -1;
+        foreach(var i in usercardrender.choose)
+        {
+            if (usercardrender.GetCard(i).type == 2)
+            {
+                continue;
+            }
+            else
+            {
+                type = usercardrender.GetCard(i).type;
+            }
+        }
+        return type;
+    }
     private void SellCard(EventContext context)
     {
 
         JsonObject msg = new JsonObject();
         msg["type"] = "sellcard";
         List<int> choosen= usercardrender.choose;
-        
-            
+
         if(choosen.Count==1||(choosen.Count==2 && 
             usercardrender.GetCard(choosen[0]).priority== usercardrender.GetCard(choosen[1]).priority &&
             ((usercardrender.GetCard(choosen[0]).type==2 && usercardrender.GetCard(choosen[1]).type!=2)||
             (usercardrender.GetCard(choosen[0]).type != 2 && usercardrender.GetCard(choosen[1]).type == 2))))
         {
+            
             msg["data"] = usercardrender.choose;
+            if (GetSellType() == 4)
+            {
+                msg["money"] = Money.text;
+            }
+            
             pclient.request("game.gameHandler.GameAction", msg, null);
             playermsg.text = "";
             usercardrender.choose.Clear();
@@ -344,7 +444,38 @@ public class GamePanel : MonoBehaviour
 
         
     }
+    private void UnionDisagree(EventContext context)
+    {
+        JsonObject msg = new JsonObject();
+        msg["type"] = "chooseunion";
+        msg["chooseunion"] = "disagree";
+        pclient.request("game.gameHandler.GameAction", msg, null);
+    }
 
+    private void UnionAgree(EventContext context)
+    {
+        JsonObject msg = new JsonObject();
+        msg["type"] = "chooseunion";
+        msg["chooseunion"] = "agree";
+        List<int> choosen = usercardrender.choose;
+
+        if (choosen.Count == 1 && usercardrender.GetCard(choosen[0]).type != 2 &&
+            usercardrender.GetCard(choosen[0]).priority == newdata.sellcard[0].priority) 
+        {
+
+            msg["data"] = usercardrender.choose;
+            
+
+            pclient.request("game.gameHandler.GameAction", msg, null);
+            playermsg.text = "";
+            usercardrender.choose.Clear();
+            usercardrender.Init();
+        }
+        else
+        {
+            playermsg.text = "出牌不符合规则，请重新选择";
+        }
+    }
     private void BuyCard(EventContext context)
     {
         JsonObject msg = new JsonObject();
@@ -352,7 +483,21 @@ public class GamePanel : MonoBehaviour
         msg["data"] = Money.text;
         pclient.request("game.gameHandler.GameAction", msg, null);
     }
-    
+    private void BuyChooseDisAgree(EventContext context)
+    {
+        JsonObject msg = new JsonObject();
+        msg["type"] = "choose";
+        msg["data"] = "disagree";
+        pclient.request("game.gameHandler.GameAction", msg, null);
+    }
+
+    private void BuyChooseAgree(EventContext context)
+    {
+        JsonObject msg = new JsonObject();
+        msg["type"] = "choose";
+        msg["data"] = "agree";
+        pclient.request("game.gameHandler.GameAction", msg, null);
+    }
     void OnPrePare(JsonObject obj)
     {
 

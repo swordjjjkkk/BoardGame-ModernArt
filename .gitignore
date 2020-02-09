@@ -27,3 +27,4 @@ PomeloServer/game-server/config/
 
 FairyGUI/.objs/
 PomeloServer/.idea/*
+PomeloServer/game-server/test.js

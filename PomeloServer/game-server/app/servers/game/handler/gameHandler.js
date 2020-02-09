@@ -22,6 +22,13 @@ class Card {
     }
 }
 
+function sleep(delay) {
+    var start = (new Date()).getTime();
+    while ((new Date()).getTime() - start < delay) {
+        continue;
+    }
+}
+
 const staticpoker = [
     new Card(0, 1, 1), new Card(1, 1, 1), new Card(2, 1, 1), new Card(3, 1, 2)
     , new Card(4, 1, 2), new Card(5, 1, 3), new Card(6, 1, 3), new Card(7, 1, 4)
@@ -81,7 +88,8 @@ class Player {
         this.host = false; //是否为主持
         this.handcards = [];
         this.actionlist = ["prepare"];
-        this.playermsg="";
+        this.playermsg = "";
+        this.buyover = false;
     }
 
     RemoveCard(id) {
@@ -120,7 +128,7 @@ class Room {
             turn: 'all', //uid  all
             action: 'sell',//sell buy
             sellcard: [],//new Card
-            commonmsg:""
+            commonmsg: "",
 
 
         };
@@ -175,6 +183,19 @@ class Room {
                 var pos = (i + 1) % this.gamestate.playerlist.length;
                 this.gamestate.turn = this.gamestate.playerlist[pos].userid;
                 this.gamestate.playerlist[pos].actionlist = [...actionlist];
+                switch (this.GetSellType()) {
+                    case 2:
+                        this.gamestate.commonmsg = "联合---" + this.gamestate.turn + "的回合"
+                        break;
+                    case 4:
+                        this.gamestate.commonmsg = "一口价" + this.gamestate.playerlist[0].buymoney + "元---" + this.gamestate.turn + "的回合"
+                        break;
+                    case 5:
+                        this.gamestate.commonmsg = "轮流---" + this.gamestate.turn + "的回合"
+                        break;
+                    default:
+                        break;
+                }
                 return;
             }
         }
@@ -190,6 +211,11 @@ class Room {
         }
     }
 
+    SetNextHostTurn(actionlist) {
+        var uid = this.GetHost().userid;
+        this.SetNextPlayerTurn(uid, actionlist);
+    }
+
     AddHostAction(actions) {
 
         let host = this.GetHost();
@@ -203,7 +229,7 @@ class Room {
         this.gamestate.state = 'running';
         var pos = Math.floor(Math.random() * this.gamestate.playerlist.length);
         this.gamestate.turn = this.gamestate.playerlist[pos].userid;
-        this.gamestate.commonmsg=this.gamestate.turn+"请出牌";
+        this.gamestate.commonmsg = this.gamestate.turn + "请出牌";
         this.gamestate.playerlist[pos].actionlist.push("sellcard");
         this.poker.Shuffle();
         for (var i in this.gamestate.playerlist) {
@@ -236,6 +262,109 @@ class Room {
             for (var j in this.gamestate.playerlist[i].handcards) {
                 this.gamestate.playerlist[i].handcards[j].owner = this.gamestate.playerlist[i].userid;
             }
+        }
+    }
+
+    SellCard() {
+        switch (this.GetSellType()) {
+            case 1:  //公开拍卖
+                this.SetAllPlayerTurn(["buycard"]);
+                this.gamestate.commonmsg = "公开拍卖请竞价"
+
+                break;
+            case 2: //联合拍卖
+
+                this.SetNextPlayerTurn(this.GetHost().userid, ["chooseunion"]);
+                break;
+            case 3://秘密拍卖
+                this.SetAllPlayerTurn(["buycard"]);
+                this.gamestate.commonmsg = "秘密拍卖请竞价"
+                break;
+            case 4://一口价拍卖
+
+                for (var p in this.gamestate.playerlist) {
+                    this.gamestate.playerlist[p].buymoney = parseInt(msg["money"]);
+                }
+                this.SetNextPlayerTurn(this.GetHost().userid, ["choose"]);
+                break
+            case 5://轮流叫价
+                this.SetNextPlayerTurn(this.GetHost().userid, ["buycard"]);
+
+                break;
+            default:
+                break;
+        }
+    }
+
+    Deal() {
+
+        var pos;
+        pos = 0;
+        for (var m in this.gamestate.playerlist) {
+            this.gamestate.playerlist[m].playermsg = "出价" + this.gamestate.playerlist[m].buymoney + "元";
+            if (this.gamestate.playerlist[m].buymoney > this.gamestate.playerlist[pos].buymoney) {
+                pos = m;
+            }
+        }
+        this.gamestate.commonmsg = this.gamestate.playerlist[pos].userid + "出价" + this.gamestate.playerlist[pos].buymoney + "元,购得此牌";
+
+        setTimeout(() => {
+            this.gamestate.playerlist[pos].money -= this.gamestate.playerlist[pos].buymoney;
+            if (this.gamestate.sellcard.length == 1) {
+
+                if (this.gamestate.sellcard[0].owner.userid == this.gamestate.playerlist[pos].userid) {
+
+                } else {
+                    this.GetPlayer(this.gamestate.sellcard[0].owner).money += this.gamestate.playerlist[pos].buymoney;
+                }
+            }
+            if (this.gamestate.sellcard.length == 2) {
+                //如果两张牌是同一个人的，且买主也是他自己
+                if (this.gamestate.sellcard[0].owner == this.gamestate.playerlist[pos].userid
+                    && this.gamestate.sellcard[1].owner == this.gamestate.playerlist[pos].userid) {
+
+                } else {
+                    this.GetPlayer(this.gamestate.sellcard[0].owner).money += parseInt(this.gamestate.playerlist[pos].buymoney / 2);
+                    this.GetPlayer(this.gamestate.sellcard[1].owner).money += parseInt(this.gamestate.playerlist[pos].buymoney / 2);
+                    if (this.gamestate.playerlist[pos].buymoney % 2 == 1) {
+                        this.GetHost().money += 1;
+                    }
+                }
+
+
+            }
+
+
+            for (var n in this.gamestate.sellcard) {
+                this.gamestate.playerlist[pos].buycard.push(this.gamestate.sellcard[n]);
+            }
+            this.gamestate.sellcard = [];
+            this.SetNextHostTurn(["sellcard"]);
+            this.gamestate.commonmsg = this.gamestate.turn + "请出牌";
+            for (var k in this.gamestate.playerlist) {
+                this.gamestate.playerlist[k].host = false;
+                this.gamestate.playerlist[k].buyover = false;
+                this.gamestate.playerlist[k].playermsg = "";
+                this.gamestate.playerlist[k].buymoney = 0;
+
+            }
+            this.GameSynData();
+        }, 6000)
+
+    }
+
+    CheckBuyOver() {
+        var temp = 0;
+        for (var i in this.gamestate.playerlist) {
+            if (this.gamestate.playerlist[i].buyover) {
+                temp++;
+            }
+        }
+        if (temp == this.gamestate.playerlist.length) {
+            for (var j in this.gamestate.playerlist) {
+                this.gamestate.playerlist[j].buyover = false;
+            }
+            this.Deal();
         }
     }
 
@@ -314,6 +443,7 @@ module.exports = function (app) {
 
 var handler = Handler.prototype;
 handler.roomlist = [];
+
 /**
  * Send messages to users
  *
@@ -330,9 +460,8 @@ handler.GameAction = function (msg, session, next) {
     });
     var room = GetRoom(session.get('rid'));
     var player = room.GetPlayer(session.uid);
-    if ((room.gamestate.turn == session.uid || room.gamestate.turn == "all") && (player.actionlist.indexOf(msg.type) != -1)||(player.host && msg.type=="deal")) {
-        for(var i in room.gamestate.playerlist)
-        {
+    if ((player.actionlist.indexOf(msg.type) != -1)) {
+        for (var i in room.gamestate.playerlist) {
             //执行一个action就清空所有玩家的actionlist，然后根据具体代码来决定能否执行其他action
             room.gamestate.playerlist[i].actionlist.splice(0, player.actionlist.length)
         }
@@ -353,81 +482,78 @@ handler.GameAction = function (msg, session, next) {
                     room.gamestate.sellcard.push(player.GetCard(msg["data"][j]));
                     player.RemoveCard(msg["data"][j]);
                 }
-                switch (room.GetSellType()) {
-                    case 1:  //公开拍卖
-                        room.SetAllPlayerTurn(["buycard"]);
-                        room.gamestate.commonmsg="公开拍卖请竞价"
-                        break;
-                    case 2: //联合拍卖
-                        break;
-                    case 3://秘密拍卖
-                        room.SetAllPlayerTurn(["buycard"]);
-                        room.gamestate.commonmsg="秘密拍卖请竞价"
-                        break;
-                    case 4://一口价拍卖
-                        break
-                    case 5://轮流叫价
-                        break;
-                    default:
-                        break;
-                }
+                room.SellCard();
 
 
                 break;
             case "buycard":
                 player.buymoney = parseInt(msg["data"]);
+                player.buyover = true;
                 switch (room.GetSellType()) {
                     case 1:  //公开拍卖
                         room.SetAllPlayerTurn(["buycard"]);
-                        player.playermsg=player.userid+"出价"+player.buymoney+"元";
+                        player.playermsg = player.userid + "出价" + player.buymoney + "元";
+                        room.AddHostAction(["deal"]);
                         break;
                     case 2: //联合拍卖
                         break;
                     case 3://秘密拍卖
                         room.SetAllPlayerTurn(["buycard"]);
-                        player.playermsg=player.userid +"已出价";
+                        player.playermsg = player.userid + "已出价";
+                        room.CheckBuyOver();
                         break;
                     case 4://一口价拍卖
                         break
                     case 5://轮流叫价
+                        room.SetNextPlayerTurn(session.uid, ["buycard"]);
+                        player.playermsg = player.userid + "出价" + player.buymoney + "元";
+                        room.CheckBuyOver();
                         break;
                     default:
                         break;
                 }
 
                 break;
+            case "choose":
+                if (player.host == true) {
+                    room.Deal();
+                }
+                if (msg["choose"] = "agree") {
+                    for (var l in room.gamestate.playerlist) {
+                        if (room.gamestate.playerlist[l].userid != session.uid) {
+                            room.gamestate.playerlist[l].buymoney = 0;
+                        }
+                    }
+                    room.Deal();
+                } else {
+                    player.buymoney = 0;
+                    room.SetNextPlayerTurn(session.uid, ["choose"]);
+                }
+                break;
+            case "chooseunion":
+                if (player.host) {//无人联合的情况
+                    room.Deal();
+                } else {
+                    if (msg["chooseunion"] == "agree") {
+                        for(var w in room.gamestate.playerlist)
+                        {
+                            room.gamestate.playerlist[w].host=false;
+                        }
+                        player.host = true;
+                        for (var q in msg["data"]) {
+                            room.gamestate.sellcard.push(player.GetCard(msg["data"][q]));
+                            player.RemoveCard(msg["data"][q]);
+                        }
+                        room.SellCard();
+                    }else{
+                        room.SetNextPlayerTurn(session.uid,["chooseunion"]);
+                    }
+                }
+
+
+                break;
             case "deal":
-
-                var pos;
-                pos = 0;
-                for (var m in room.gamestate.playerlist) {
-                    if (room.gamestate.playerlist[m].buymoney > room.gamestate.playerlist[pos].buymoney) {
-                        pos = m;
-                    }
-                }
-                room.gamestate.playerlist[pos].money -= room.gamestate.playerlist[pos].buymoney;
-                if (room.gamestate.sellcard.length == 1) {
-                    room.GetPlayer(room.gamestate.sellcard[0].owner).money += room.gamestate.playerlist[pos].buymoney;
-                }
-                if (room.gamestate.sellcard.length == 2) {
-                    room.GetPlayer(room.gamestate.sellcard[0].owner).money += parseInt(room.gamestate.playerlist[pos].buymoney / 2);
-                    room.GetPlayer(room.gamestate.sellcard[1].owner).money += parseInt(room.gamestate.playerlist[pos].buymoney / 2);
-                    if (room.gamestate.playerlist[pos].buymoney % 2 == 1) {
-                        room.GetHost().money += 1;
-                    }
-                }
-
-
-                for (var n in room.gamestate.sellcard) {
-                    room.gamestate.playerlist[pos].buycard.push(room.gamestate.sellcard[n]);
-                }
-                room.gamestate.sellcard = [];
-                room.SetNextPlayerTurn(session.uid, ["sellcard"]);
-                room.gamestate.commonmsg=room.gamestate.turn+"请出牌";
-                for(var k in room.gamestate.playerlist)
-                {
-                    room.gamestate.playerlist[k].host=false;
-                }
+                room.Deal();
                 break;
             default:
                 break;
