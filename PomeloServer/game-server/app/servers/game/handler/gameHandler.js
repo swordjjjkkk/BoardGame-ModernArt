@@ -265,7 +265,7 @@ class Room {
         }
     }
 
-    SellCard() {
+    SellCard(msg) {
         switch (this.GetSellType()) {
             case 1:  //公开拍卖
                 this.SetAllPlayerTurn(["buycard"]);
@@ -297,13 +297,23 @@ class Room {
     }
 
     Deal() {
-
-        var pos;
-        pos = 0;
+        var pos=0;
+        var hostpos;
+        hostpos = 0;
         for (var m in this.gamestate.playerlist) {
-            this.gamestate.playerlist[m].playermsg = "出价" + this.gamestate.playerlist[m].buymoney + "元";
-            if (this.gamestate.playerlist[m].buymoney > this.gamestate.playerlist[pos].buymoney) {
-                pos = m;
+            if(this.gamestate.playerlist[m].host)
+            {
+                hostpos=m;
+                break;
+            }
+
+        }
+        pos=hostpos;
+        for (var p=hostpos;p<this.gamestate.playerlist.length+hostpos-1;p++) {
+
+            this.gamestate.playerlist[p%this.gamestate.playerlist.length].playermsg = "出价" + this.gamestate.playerlist[p%this.gamestate.playerlist.length].buymoney + "元";
+            if (this.gamestate.playerlist[(p+1)%this.gamestate.playerlist.length].buymoney > this.gamestate.playerlist[pos].buymoney) {
+                pos = (p+1)%this.gamestate.playerlist.length;
             }
         }
         this.gamestate.commonmsg = this.gamestate.playerlist[pos].userid + "出价" + this.gamestate.playerlist[pos].buymoney + "元,购得此牌";
@@ -482,7 +492,7 @@ handler.GameAction = function (msg, session, next) {
                     room.gamestate.sellcard.push(player.GetCard(msg["data"][j]));
                     player.RemoveCard(msg["data"][j]);
                 }
-                room.SellCard();
+                room.SellCard(msg);
 
 
                 break;

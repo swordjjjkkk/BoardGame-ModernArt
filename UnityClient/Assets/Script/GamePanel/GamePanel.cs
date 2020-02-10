@@ -412,6 +412,16 @@ public class GamePanel : MonoBehaviour
         }
         return type;
     }
+    int GetMaxBuyMoney()
+    {
+        int max = 0;
+        foreach(var i in newdata.playerlist)
+        {
+            if (i.buymoney > max)
+                max = i.buymoney;
+        }
+        return max;
+    }
     private void SellCard(EventContext context)
     {
 
@@ -481,8 +491,49 @@ public class GamePanel : MonoBehaviour
         JsonObject msg = new JsonObject();
         msg["type"] = "buycard";
         msg["data"] = Money.text;
+        switch(GetNowSellType())
+        {
+            case 1:
+                if(int.Parse(Money.text)<=GetMaxBuyMoney() && int.Parse(Money.text) != 0)
+                {
+                    GTextField localmsg = userpanel.GetChild("n16").asTextField;
+                    localmsg.text = "请出更大价格";
+                    return;
+                }
+                break;
+            case 5:
+                if (int.Parse(Money.text) <= GetMaxBuyMoney() && int.Parse(Money.text)!=0)
+                {
+                    GTextField localmsg = userpanel.GetChild("n16").asTextField;
+                    localmsg.text = "请出更大价格";
+                    return;
+                }
+                break;
+        }
         pclient.request("game.gameHandler.GameAction", msg, null);
     }
+
+    private int GetNowSellType()
+    {
+        int type = -1;
+        if(newdata.sellcard.Count==1)
+        {
+            type = newdata.sellcard[0].type;
+        }
+        if(newdata.sellcard.Count==2)
+        {
+            if(newdata.sellcard[0].type==2)
+            {
+                type = newdata.sellcard[1].type;
+            }
+            else
+            {
+                type = newdata.sellcard[0].type;
+            }
+        }
+        return type;
+    }
+
     private void BuyChooseDisAgree(EventContext context)
     {
         JsonObject msg = new JsonObject();
