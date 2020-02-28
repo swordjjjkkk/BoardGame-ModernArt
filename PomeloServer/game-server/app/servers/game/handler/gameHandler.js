@@ -129,6 +129,8 @@ class Room {
             action: 'sell',//sell buy
             sellcard: [],//new Card
             commonmsg: "",
+            cardvalue:[0,0,0,0,0],
+            round:1
 
 
         };
@@ -265,7 +267,95 @@ class Room {
         }
     }
 
+    SortSelled()
+    {
+        var res=[{priority:1,count:0},{priority:2,count:0},{priority:3,count:0},{priority:4,count:0},{priority:5,count:0}];
+        for(let i in this.gamestate.playerlist){
+            for(let j in this.gamestate.playerlist[i].buycard){
+                res[this.gamestate.playerlist[i].buycard[j].priority].count++;
+            }
+        }
+        res.sort((a,b)=>{
+            return b.count-a.count;
+        })
+        return res;
+    }
+    GetSellCardCount(priority){
+        var res=0;
+        for(let i in this.gamestate.playerlist){
+            for(let j in this.gamestate.playerlist[i].buycard){
+                if(this.gamestate.playerlist[i].buycard[j].priority==priority){
+                    res++;
+                }
+            }
+        }
+        return res;
+    }
+    RoundOver(){
+        var selledcards=this.SortSelled();
+
+        if(selledcards[0].count!=0){
+            this.gamestate.cardvalue[selledcards[0].priority]+=30;
+        }
+        if(selledcards[1].count!=0){
+            this.gamestate.cardvalue[selledcards[1].priority]+=20;
+        }
+        if(selledcards[2].count!=0){
+            this.gamestate.cardvalue[selledcards[2].priority]+=10;
+        }
+        //结算画钱
+        for(let i in this.gamestate.playerlist)
+        {
+            for(let j in this.gamestate.playerlist[i].buycard){
+                if(this.gamestate.playerlist[i].buycard[j].priority==selledcards[0].priority||
+                this.gamestate.playerlist[i].buycard[j].priority==selledcards[1].priority||
+                this.gamestate.playerlist[i].buycard[j].priority==selledcards[2].priority){
+                    this.gamestate.playerlist[i].money+=this.gamestate.cardvalue[this.gamestate.playerlist[i].buycard[j].priority];
+                }
+                this.gamestate.playerlist[i].playermsg="我挣得xxx元";
+            }
+        }
+        //恢复回合初始，下一个人接着卖
+        for(let i in this.gamestate.playerlist){
+            this.gamestate.playerlist[i].buycard=[];
+        }
+        this.gamestate.commonmsg="第"+this.gamestate.round+"回合结束，等待下回合开始"
+        this.GameSynData();
+        this.gamestate.round++;
+        setTimeout(()=>{
+            if(this.gamestate.round==5){
+                this.GameOver();
+                return;
+            }
+            this.SetNextHostTurn(["sellcard"]);
+            this.gamestate.commonmsg=this.gamestate.turn + "请出牌";
+            this.GameSynData();
+        },5000)
+
+    }
+    GameOver(){
+        var winner;
+        winner=this.gamestate.playerlist[0].userid;
+        for(var i in this.gamestate.playerlist){
+            if(i>0){
+                if(this.gamestate.playerlist[i]>this.gamestate.playerlist[i-1]){
+                    winner=this.gamestate.playerlist[i].userid;
+                }
+            }
+
+            this.gamestate.playerlist[i].playermsg="我挣得"+this.gamestate.playerlist[i].money+"元";
+        }
+        this.gamestate.commonmsg="Winner is Sogou!!"
+        this.GameSynData();
+        //恢复现场，开始下一局
+        setTimeout(()=>{},30000);
+    }
     SellCard(msg) {
+        //判断回合终结
+        if(this.gamestate.sellcard.length+this.GetSellCardCount(this.gamestate.sellcard[0].priority)>=5){
+            this.RoundOver();
+            return;
+        }
         switch (this.GetSellType()) {
             case 1:  //公开拍卖
                 this.SetAllPlayerTurn(["buycard"]);
@@ -286,7 +376,7 @@ class Room {
                     this.gamestate.playerlist[p].buymoney = parseInt(msg["money"]);
                 }
                 this.SetNextPlayerTurn(this.GetHost().userid, ["choose"]);
-                break
+                break;
             case 5://轮流叫价
                 this.SetNextPlayerTurn(this.GetHost().userid, ["buycard"]);
 
@@ -319,6 +409,7 @@ class Room {
         this.gamestate.commonmsg = this.gamestate.playerlist[pos].userid + "出价" + this.gamestate.playerlist[pos].buymoney + "元,购得此牌";
 
         setTimeout(() => {
+            //减去购买人的钱
             this.gamestate.playerlist[pos].money -= this.gamestate.playerlist[pos].buymoney;
             if (this.gamestate.sellcard.length == 1) {
 
@@ -528,7 +619,7 @@ handler.GameAction = function (msg, session, next) {
                 if (player.host == true) {
                     room.Deal();
                 }
-                if (msg["choose"] = "agree") {
+                if (msg["choose"] == "agree") {
                     for (var l in room.gamestate.playerlist) {
                         if (room.gamestate.playerlist[l].userid != session.uid) {
                             room.gamestate.playerlist[l].buymoney = 0;

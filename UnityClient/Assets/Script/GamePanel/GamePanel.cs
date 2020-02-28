@@ -326,7 +326,12 @@ public class GamePanel : MonoBehaviour
             });
         }
 
-        
+        //显示画的价值
+        deskpanel.GetChild("n8").text = newdata.cardvalue[0].ToString();
+        deskpanel.GetChild("n9").text = newdata.cardvalue[1].ToString();
+        deskpanel.GetChild("n10").text = newdata.cardvalue[2].ToString();
+        deskpanel.GetChild("n11").text = newdata.cardvalue[3].ToString();
+        deskpanel.GetChild("n12").text = newdata.cardvalue[4].ToString();
 
         //显示购买到的牌
         localbuycardrender.Clear();
