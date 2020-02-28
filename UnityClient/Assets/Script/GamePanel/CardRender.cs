@@ -65,6 +65,12 @@ namespace Assets.Script.GamePanel
         public void Clear()
         {
             cards.Clear();
+            Loom.QueueOnMainThread(() => {//切换为主线程
+                for (int i = 0; i < cards.Count; i++)
+                {
+                    BtnCardList[cards[i].id].visible = false;
+                }
+            });
         }
 
 

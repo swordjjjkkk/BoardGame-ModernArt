@@ -479,7 +479,8 @@ public class GamePanel : MonoBehaviour
         {
 
             msg["data"] = usercardrender.choose;
-            
+            msg["money"]= Money.text;
+
 
             pclient.request("game.gameHandler.GameAction", msg, null);
             playermsg.text = "";

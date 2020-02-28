@@ -272,7 +272,7 @@ class Room {
         var res=[{priority:1,count:0},{priority:2,count:0},{priority:3,count:0},{priority:4,count:0},{priority:5,count:0}];
         for(let i in this.gamestate.playerlist){
             for(let j in this.gamestate.playerlist[i].buycard){
-                res[this.gamestate.playerlist[i].buycard[j].priority].count++;
+                res[this.gamestate.playerlist[i].buycard[j].priority-1].count++;
             }
         }
         res.sort((a,b)=>{
@@ -295,13 +295,13 @@ class Room {
         var selledcards=this.SortSelled();
 
         if(selledcards[0].count!=0){
-            this.gamestate.cardvalue[selledcards[0].priority]+=30;
+            this.gamestate.cardvalue[selledcards[0].priority-1]+=30;
         }
         if(selledcards[1].count!=0){
-            this.gamestate.cardvalue[selledcards[1].priority]+=20;
+            this.gamestate.cardvalue[selledcards[1].priority-1]+=20;
         }
         if(selledcards[2].count!=0){
-            this.gamestate.cardvalue[selledcards[2].priority]+=10;
+            this.gamestate.cardvalue[selledcards[2].priority-1]+=10;
         }
         //结算画钱
         for(let i in this.gamestate.playerlist)
@@ -310,11 +310,13 @@ class Room {
                 if(this.gamestate.playerlist[i].buycard[j].priority==selledcards[0].priority||
                 this.gamestate.playerlist[i].buycard[j].priority==selledcards[1].priority||
                 this.gamestate.playerlist[i].buycard[j].priority==selledcards[2].priority){
-                    this.gamestate.playerlist[i].money+=this.gamestate.cardvalue[this.gamestate.playerlist[i].buycard[j].priority];
+                    this.gamestate.playerlist[i].money+=this.gamestate.cardvalue[this.gamestate.playerlist[i].buycard[j].priority-1];
                 }
                 this.gamestate.playerlist[i].playermsg="我挣得xxx元";
             }
         }
+
+
         //恢复回合初始，下一个人接着卖
         for(let i in this.gamestate.playerlist){
             this.gamestate.playerlist[i].buycard=[];
@@ -322,11 +324,78 @@ class Room {
         this.gamestate.commonmsg="第"+this.gamestate.round+"回合结束，等待下回合开始"
         this.GameSynData();
         this.gamestate.round++;
+        //补牌
+        if(this.gamestate.playernum==3)
+        {
+            switch (this.gamestate.round) {
+                case 1:
+
+                    break;
+                case 2:
+                    this.gamestate.playerlist[0].handcards.push(this.poker.staticcards.splice(0, 6));
+                    this.gamestate.playerlist[1].handcards.push(this.poker.staticcards.splice(0, 6));
+                    this.gamestate.playerlist[2].handcards.push(this.poker.staticcards.splice(0, 6));
+                    break;
+                case 3:
+                    this.gamestate.playerlist[0].handcards.push(this.poker.staticcards.splice(0, 6));
+                    this.gamestate.playerlist[1].handcards.push(this.poker.staticcards.splice(0, 6));
+                    this.gamestate.playerlist[2].handcards.push(this.poker.staticcards.splice(0, 6));
+                    break;
+                case 4:
+                    break;
+            }
+        }
+        if(this.gamestate.playernum==4)
+        {
+            switch (this.gamestate.round) {
+                case 1:
+
+                    break;
+                case 2:
+                    this.gamestate.playerlist[0].handcards.push(this.poker.staticcards.splice(0, 4));
+                    this.gamestate.playerlist[1].handcards.push(this.poker.staticcards.splice(0, 4));
+                    this.gamestate.playerlist[2].handcards.push(this.poker.staticcards.splice(0, 4));
+                    this.gamestate.playerlist[3].handcards.push(this.poker.staticcards.splice(0, 4));
+                    break;
+                case 3:
+                    this.gamestate.playerlist[0].handcards.push(this.poker.staticcards.splice(0, 4));
+                    this.gamestate.playerlist[1].handcards.push(this.poker.staticcards.splice(0, 4));
+                    this.gamestate.playerlist[2].handcards.push(this.poker.staticcards.splice(0, 4));
+                    this.gamestate.playerlist[3].handcards.push(this.poker.staticcards.splice(0, 4));
+                    break;
+                case 4:
+                    break;
+            }
+        }
+        if(this.gamestate.playernum==5)
+        {
+            switch (this.gamestate.round) {
+                case 1:
+                    break;
+                case 2:
+                    this.gamestate.playerlist[0].handcards.push(this.poker.staticcards.splice(0, 3));
+                    this.gamestate.playerlist[1].handcards.push(this.poker.staticcards.splice(0, 3));
+                    this.gamestate.playerlist[2].handcards.push(this.poker.staticcards.splice(0, 3));
+                    this.gamestate.playerlist[2].handcards.push(this.poker.staticcards.splice(0, 3));
+                    this.gamestate.playerlist[2].handcards.push(this.poker.staticcards.splice(0, 3));
+                    break;
+                case 3:
+                    this.gamestate.playerlist[0].handcards.push(this.poker.staticcards.splice(0, 3));
+                    this.gamestate.playerlist[1].handcards.push(this.poker.staticcards.splice(0, 3));
+                    this.gamestate.playerlist[2].handcards.push(this.poker.staticcards.splice(0, 3));
+                    this.gamestate.playerlist[2].handcards.push(this.poker.staticcards.splice(0, 3));
+                    this.gamestate.playerlist[2].handcards.push(this.poker.staticcards.splice(0, 3));
+                    break;
+                case 4:
+                    break;
+            }
+        }
         setTimeout(()=>{
             if(this.gamestate.round==5){
                 this.GameOver();
                 return;
             }
+            this.gamestate.sellcard=[];
             this.SetNextHostTurn(["sellcard"]);
             this.gamestate.commonmsg=this.gamestate.turn + "请出牌";
             this.GameSynData();
@@ -413,7 +482,7 @@ class Room {
             this.gamestate.playerlist[pos].money -= this.gamestate.playerlist[pos].buymoney;
             if (this.gamestate.sellcard.length == 1) {
 
-                if (this.gamestate.sellcard[0].owner.userid == this.gamestate.playerlist[pos].userid) {
+                if (this.gamestate.sellcard[0].owner == this.gamestate.playerlist[pos].userid) {
 
                 } else {
                     this.GetPlayer(this.gamestate.sellcard[0].owner).money += this.gamestate.playerlist[pos].buymoney;
@@ -619,7 +688,7 @@ handler.GameAction = function (msg, session, next) {
                 if (player.host == true) {
                     room.Deal();
                 }
-                if (msg["choose"] == "agree") {
+                if (msg["data"] == "agree") {
                     for (var l in room.gamestate.playerlist) {
                         if (room.gamestate.playerlist[l].userid != session.uid) {
                             room.gamestate.playerlist[l].buymoney = 0;
@@ -645,7 +714,7 @@ handler.GameAction = function (msg, session, next) {
                             room.gamestate.sellcard.push(player.GetCard(msg["data"][q]));
                             player.RemoveCard(msg["data"][q]);
                         }
-                        room.SellCard();
+                        room.SellCard(msg);
                     }else{
                         room.SetNextPlayerTurn(session.uid,["chooseunion"]);
                     }
