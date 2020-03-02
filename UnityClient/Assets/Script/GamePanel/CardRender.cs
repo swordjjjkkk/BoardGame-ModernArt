@@ -59,18 +59,27 @@ namespace Assets.Script.GamePanel
         public virtual void addcards(MsgCard newcard)
         {
             BtnCardList[newcard.id].onClick.Clear();
-            BtnCardList[newcard.id].size = new Vector2(this.cardwidth, this.cardheight);
+            Loom.QueueOnMainThread(() => {//切换为主线程
+
+                BtnCardList[newcard.id].size = new Vector2(this.cardwidth, this.cardheight);
+            });
+       
             cards.Add(newcard);
         }
         public void Clear()
         {
-            cards.Clear();
+            List<int> temp =new List<int>();
+            for (int i = 0; i < cards.Count; i++)
+            {
+                temp.Add(cards[i].id);
+            }
             Loom.QueueOnMainThread(() => {//切换为主线程
-                for (int i = 0; i < cards.Count; i++)
+                for (int i = 0; i < temp.Count; i++)
                 {
-                    BtnCardList[cards[i].id].visible = false;
+                    BtnCardList[temp[i]].visible = false;
                 }
             });
+            cards.Clear();
         }
 
 
@@ -133,7 +142,11 @@ namespace Assets.Script.GamePanel
 
             BtnCardList[newcard.id].onClick.Clear();
             cards.Add(newcard);
-            BtnCardList[newcard.id].size = new Vector2(this.cardwidth, this.cardheight);
+            Loom.QueueOnMainThread(() => {//切换为主线程
+
+                BtnCardList[newcard.id].size = new Vector2(this.cardwidth, this.cardheight);
+            });
+            
             BtnCardList[newcard.id].onClick.Add(CardClicked);
         }
         void CardClicked(EventContext context)

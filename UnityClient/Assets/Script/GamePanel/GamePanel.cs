@@ -176,6 +176,25 @@ public class GamePanel : MonoBehaviour
         int pos = GetPosition();
         if(pos!=-1)
         {
+            //显示准备按钮
+            if(newdata.state=="waiting")
+            {
+                Loom.QueueOnMainThread(() => {//切换为主线程
+
+                    ReadyButton.visible = true;
+                    
+                    if(newdata.playerlist[pos].ready)
+                    {
+                        ReadyButton.color = new Color(255, 0, 255);
+                    }
+                    else
+                    {
+                        ReadyButton.color = new Color(0, 0, 0);
+                    }
+                    
+                });
+
+            }
             //资金和姓名显示
             GTextField money = userpanel.GetChild("n14").asTextField;
             GTextField name = userpanel.GetChild("n18").asTextField;
@@ -382,6 +401,17 @@ public class GamePanel : MonoBehaviour
         JObject jobject = (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(obj.ToString());
         TransferMsg(jobject["data"]);
         ProcessMsg();
+        if(olddata.state=="waiting" && newdata.state == "running")
+        {
+            Loom.QueueOnMainThread(() => {//切换为主线程
+                
+                for (int i = 0; i < BtnCard.Length; i++)
+                {
+                    GImage temp = BtnCard[i].GetChild("n1").asImage;
+                    temp.visible = true;
+                }
+            });
+        }
         olddata = newdata;
      
 
