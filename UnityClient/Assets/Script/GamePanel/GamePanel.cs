@@ -474,6 +474,11 @@ public class GamePanel : MonoBehaviour
             if (GetSellType() == 4)
             {
                 msg["money"] = Money.text;
+                if(int.Parse((string)msg["money"])==0)
+                {
+                    playermsg.text = "请输入拍卖价格";
+                    return;
+                }
             }
             
             pclient.request("game.gameHandler.GameAction", msg, null);
