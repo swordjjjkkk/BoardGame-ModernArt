@@ -401,17 +401,17 @@ public class GamePanel : MonoBehaviour
         JObject jobject = (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(obj.ToString());
         TransferMsg(jobject["data"]);
         ProcessMsg();
-        if(olddata.state=="waiting" && newdata.state == "running")
-        {
-            Loom.QueueOnMainThread(() => {//切换为主线程
+        //if(olddata.state=="waiting" && newdata.state == "running")
+        //{
+        //    Loom.QueueOnMainThread(() => {//切换为主线程
                 
-                for (int i = 0; i < BtnCard.Length; i++)
-                {
-                    GImage temp = BtnCard[i].GetChild("n1").asImage;
-                    temp.visible = true;
-                }
-            });
-        }
+        //        for (int i = 0; i < BtnCard.Length; i++)
+        //        {
+        //            GImage temp = BtnCard[i].GetChild("n1").asImage;
+        //            temp.visible = true;
+        //        }
+        //    });
+        //}
         olddata = newdata;
      
 
