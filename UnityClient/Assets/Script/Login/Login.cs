@@ -54,7 +54,7 @@ public class Login : MonoBehaviour
     {
 
         username = obj_username.text;
-        string host = "127.0.0.1"; // gate的host和port
+        string host = "39.105.197.43"; // gate的host和port
         int port = 15014;
 
         pomeloClient = new PomeloClient();
