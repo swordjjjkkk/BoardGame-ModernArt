@@ -370,13 +370,13 @@ class Room {
                         break;
                     case 2:
                         this.gamestate.playerlist[0].handcards = this.gamestate.playerlist[0].handcards.concat(this.poker.staticcards.splice(0, 6));
-                        this.gamestate.playerlist[1].handcards = this.gamestate.playerlist[1].handcards.concat(this.poker.staticcards.splice(0, 6));
-                        this.gamestate.playerlist[2].handcards = this.gamestate.playerlist[2].handcards.concat(this.poker.staticcards.splice(0, 6));
+                        // this.gamestate.playerlist[1].handcards = this.gamestate.playerlist[1].handcards.concat(this.poker.staticcards.splice(0, 6));
+                        // this.gamestate.playerlist[2].handcards = this.gamestate.playerlist[2].handcards.concat(this.poker.staticcards.splice(0, 6));
                         break;
                     case 3:
                         this.gamestate.playerlist[0].handcards = this.gamestate.playerlist[0].handcards.concat(this.poker.staticcards.splice(0, 6));
-                        this.gamestate.playerlist[1].handcards = this.gamestate.playerlist[1].handcards.concat(this.poker.staticcards.splice(0, 6));
-                        this.gamestate.playerlist[2].handcards = this.gamestate.playerlist[2].handcards.concat(this.poker.staticcards.splice(0, 6));
+                        // this.gamestate.playerlist[1].handcards = this.gamestate.playerlist[1].handcards.concat(this.poker.staticcards.splice(0, 6));
+                        // this.gamestate.playerlist[2].handcards = this.gamestate.playerlist[2].handcards.concat(this.poker.staticcards.splice(0, 6));
                         break;
                     case 4:
                         break;
@@ -389,15 +389,15 @@ class Room {
                         break;
                     case 2:
                         this.gamestate.playerlist[0].handcards = this.gamestate.playerlist[0].handcards.concat(this.poker.staticcards.splice(0, 4));
-                        this.gamestate.playerlist[1].handcards = this.gamestate.playerlist[1].handcards.concat(this.poker.staticcards.splice(0, 4));
-                        this.gamestate.playerlist[2].handcards = this.gamestate.playerlist[2].handcards.concat(this.poker.staticcards.splice(0, 4));
-                        this.gamestate.playerlist[3].handcards = this.gamestate.playerlist[3].handcards.concat(this.poker.staticcards.splice(0, 4));
+                        // this.gamestate.playerlist[1].handcards = this.gamestate.playerlist[1].handcards.concat(this.poker.staticcards.splice(0, 4));
+                        // this.gamestate.playerlist[2].handcards = this.gamestate.playerlist[2].handcards.concat(this.poker.staticcards.splice(0, 4));
+                        // this.gamestate.playerlist[3].handcards = this.gamestate.playerlist[3].handcards.concat(this.poker.staticcards.splice(0, 4));
                         break;
                     case 3:
                         this.gamestate.playerlist[0].handcards = this.gamestate.playerlist[0].handcards.concat(this.poker.staticcards.splice(0, 4));
-                        this.gamestate.playerlist[1].handcards = this.gamestate.playerlist[1].handcards.concat(this.poker.staticcards.splice(0, 4));
-                        this.gamestate.playerlist[2].handcards = this.gamestate.playerlist[2].handcards.concat(this.poker.staticcards.splice(0, 4));
-                        this.gamestate.playerlist[3].handcards = this.gamestate.playerlist[3].handcards.concat(this.poker.staticcards.splice(0, 4));
+                        // this.gamestate.playerlist[1].handcards = this.gamestate.playerlist[1].handcards.concat(this.poker.staticcards.splice(0, 4));
+                        // this.gamestate.playerlist[2].handcards = this.gamestate.playerlist[2].handcards.concat(this.poker.staticcards.splice(0, 4));
+                        // this.gamestate.playerlist[3].handcards = this.gamestate.playerlist[3].handcards.concat(this.poker.staticcards.splice(0, 4));
                         break;
                     case 4:
                         break;
@@ -409,17 +409,17 @@ class Room {
                         break;
                     case 2:
                         this.gamestate.playerlist[0].handcards = this.gamestate.playerlist[0].handcards.concat(this.poker.staticcards.splice(0, 3));
-                        this.gamestate.playerlist[1].handcards = this.gamestate.playerlist[1].handcards.concat(this.poker.staticcards.splice(0, 3));
-                        this.gamestate.playerlist[2].handcards = this.gamestate.playerlist[2].handcards.concat(this.poker.staticcards.splice(0, 3));
-                        this.gamestate.playerlist[3].handcards = this.gamestate.playerlist[3].handcards.concat(this.poker.staticcards.splice(0, 3));
-                        this.gamestate.playerlist[4].handcards = this.gamestate.playerlist[4].handcards.concat(this.poker.staticcards.splice(0, 3));
+                        // this.gamestate.playerlist[1].handcards = this.gamestate.playerlist[1].handcards.concat(this.poker.staticcards.splice(0, 3));
+                        // this.gamestate.playerlist[2].handcards = this.gamestate.playerlist[2].handcards.concat(this.poker.staticcards.splice(0, 3));
+                        // this.gamestate.playerlist[3].handcards = this.gamestate.playerlist[3].handcards.concat(this.poker.staticcards.splice(0, 3));
+                        // this.gamestate.playerlist[4].handcards = this.gamestate.playerlist[4].handcards.concat(this.poker.staticcards.splice(0, 3));
                         break;
                     case 3:
                         this.gamestate.playerlist[0].handcards = this.gamestate.playerlist[0].handcards.concat(this.poker.staticcards.splice(0, 3));
-                        this.gamestate.playerlist[1].handcards = this.gamestate.playerlist[1].handcards.concat(this.poker.staticcards.splice(0, 3));
-                        this.gamestate.playerlist[2].handcards = this.gamestate.playerlist[2].handcards.concat(this.poker.staticcards.splice(0, 3));
-                        this.gamestate.playerlist[3].handcards = this.gamestate.playerlist[3].handcards.concat(this.poker.staticcards.splice(0, 3));
-                        this.gamestate.playerlist[4].handcards = this.gamestate.playerlist[4].handcards.concat(this.poker.staticcards.splice(0, 3));
+                        // this.gamestate.playerlist[1].handcards = this.gamestate.playerlist[1].handcards.concat(this.poker.staticcards.splice(0, 3));
+                        // this.gamestate.playerlist[2].handcards = this.gamestate.playerlist[2].handcards.concat(this.poker.staticcards.splice(0, 3));
+                        // this.gamestate.playerlist[3].handcards = this.gamestate.playerlist[3].handcards.concat(this.poker.staticcards.splice(0, 3));
+                        // this.gamestate.playerlist[4].handcards = this.gamestate.playerlist[4].handcards.concat(this.poker.staticcards.splice(0, 3));
                         break;
                     case 4:
                         break;
@@ -434,7 +434,7 @@ class Room {
             this.SetNextHostTurn(["sellcard"]);
             this.gamestate.commonmsg = this.gamestate.turn + "请出牌";
             this.GameSynData();
-        }, 5000)
+        }, 1000)
 
     }
 
@@ -584,7 +584,7 @@ class Room {
                 temp++;
             }
         }
-        //this.GameStart();
+        this.GameStart();
         if (temp == this.gamestate.playernum && this.gamestate.state == 'waiting') {
             this.GameStart();
         }
