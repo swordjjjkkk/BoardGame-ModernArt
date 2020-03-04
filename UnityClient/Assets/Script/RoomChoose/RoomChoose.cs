@@ -62,7 +62,12 @@ public class RoomChoose : MonoBehaviour
         //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         JsonObject msg = new JsonObject();
         rid = (roomidobj.text);
+        
         playernum = playernumobj.text;
+        if (playernum == "")
+        {
+            playernum = "4";
+        }
         msg["rid"] = rid;
         msg["playernum"] = playernum;
         pclient.request("game.gameHandler.CreateRoom", msg, JoinRoom);
@@ -72,6 +77,7 @@ public class RoomChoose : MonoBehaviour
         Debug.unityLogger.Log("button clicked");
         JsonObject msg = new JsonObject();
         rid = (roomidobj.text);
+        
         msg["rid"] = rid;
        
         pclient.request("game.gameHandler.JoinRoom", msg, JoinRoom);
