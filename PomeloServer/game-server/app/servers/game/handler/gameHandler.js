@@ -672,7 +672,7 @@ handler.GameAction = function (msg, session, next) {
     if ((player.actionlist.indexOf(msg.type) != -1)) {
         for (var i in room.gamestate.playerlist) {
             //执行一个action就清空所有玩家的actionlist，然后根据具体代码来决定能否执行其他action
-            room.gamestate.playerlist[i].actionlist.splice(0, player.actionlist.length)
+            room.gamestate.playerlist[i].actionlist.splice(0, room.gamestate.playerlist[i].actionlist.length)
         }
         //player.actionlist.splice();
         switch (msg.type) {

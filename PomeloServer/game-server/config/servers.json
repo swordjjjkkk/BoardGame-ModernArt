@@ -1,9 +1,8 @@
 {
     "development":{
         "connector":[
-             {"id":"connector-server-1", "host":"127.0.0.1", "port":14050, "clientPort": 13050, "frontend": true},
-             {"id":"connector-server-2", "host":"127.0.0.1", "port":14051, "clientPort": 13051, "frontend": true},
-             {"id":"connector-server-3", "host":"127.0.0.1", "port":14052, "clientPort": 13052, "frontend": true}
+             {"id":"connector-server-1", "host":"127.0.0.1", "port":14050, "clientPort": 13050, "frontend": true}
+
          ],
         "chat":[
              {"id":"chat-server-1", "host":"127.0.0.1", "port":16050},
@@ -20,9 +19,8 @@
     },
     "production":{
            "connector":[
-             {"id":"connector-server-1", "host":"127.0.0.1", "port":14050, "clientPort": 13050, "frontend": true},
-             {"id":"connector-server-2", "host":"127.0.0.1", "port":14051, "clientPort": 13051, "frontend": true},
-             {"id":"connector-server-3", "host":"127.0.0.1", "port":14052, "clientPort": 13052, "frontend": true}
+             {"id":"connector-server-1", "host":"127.0.0.1", "port":14050, "clientPort": 13050, "frontend": true}
+
          ],
         "chat":[
              {"id":"chat-server-1", "host":"127.0.0.1", "port":16050},
