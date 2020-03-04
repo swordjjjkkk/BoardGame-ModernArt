@@ -411,15 +411,15 @@ class Room {
                         this.gamestate.playerlist[0].handcards = this.gamestate.playerlist[0].handcards.concat(this.poker.staticcards.splice(0, 3));
                         this.gamestate.playerlist[1].handcards = this.gamestate.playerlist[1].handcards.concat(this.poker.staticcards.splice(0, 3));
                         this.gamestate.playerlist[2].handcards = this.gamestate.playerlist[2].handcards.concat(this.poker.staticcards.splice(0, 3));
-                        this.gamestate.playerlist[3].handcards = this.gamestate.playerlist[2].handcards.concat(this.poker.staticcards.splice(0, 3));
-                        this.gamestate.playerlist[4].handcards = this.gamestate.playerlist[2].handcards.concat(this.poker.staticcards.splice(0, 3));
+                        this.gamestate.playerlist[3].handcards = this.gamestate.playerlist[3].handcards.concat(this.poker.staticcards.splice(0, 3));
+                        this.gamestate.playerlist[4].handcards = this.gamestate.playerlist[4].handcards.concat(this.poker.staticcards.splice(0, 3));
                         break;
                     case 3:
                         this.gamestate.playerlist[0].handcards = this.gamestate.playerlist[0].handcards.concat(this.poker.staticcards.splice(0, 3));
                         this.gamestate.playerlist[1].handcards = this.gamestate.playerlist[1].handcards.concat(this.poker.staticcards.splice(0, 3));
                         this.gamestate.playerlist[2].handcards = this.gamestate.playerlist[2].handcards.concat(this.poker.staticcards.splice(0, 3));
-                        this.gamestate.playerlist[3].handcards = this.gamestate.playerlist[2].handcards.concat(this.poker.staticcards.splice(0, 3));
-                        this.gamestate.playerlist[4].handcards = this.gamestate.playerlist[2].handcards.concat(this.poker.staticcards.splice(0, 3));
+                        this.gamestate.playerlist[3].handcards = this.gamestate.playerlist[3].handcards.concat(this.poker.staticcards.splice(0, 3));
+                        this.gamestate.playerlist[4].handcards = this.gamestate.playerlist[4].handcards.concat(this.poker.staticcards.splice(0, 3));
                         break;
                     case 4:
                         break;
