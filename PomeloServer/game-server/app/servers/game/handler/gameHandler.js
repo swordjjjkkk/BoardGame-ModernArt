@@ -557,7 +557,7 @@ class Room {
 
             }
             this.GameSynData();
-        }, 4000)
+        }, 1000)
 
     }
 
