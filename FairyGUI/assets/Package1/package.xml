@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<packageDescription id="josdyi85" jpegQuality="80" compressPNG="true">
+<packageDescription id="josdyi85">
   <resources>
     <image id="jvtj0" name="loginbackground.png" path="/CommonAsset/" exported="true"/>
     <image id="jvtjb" name="input.png" path="/CommonAsset/" exported="true"/>
@@ -119,5 +119,5 @@
     <component id="cin54e" name="gamepanel5.xml" path="/GamePanel/" exported="true"/>
     <component id="iega4g" name="deal.xml" path="/UserPanel/"/>
   </resources>
-  <publish name="Package1" path="D:\BoardGame-ModernArt\UnityClient\Assets\Resources"/>
+  <publish name="Package1" path="D:\SourceTreeProject\BoardGame-ModernArt\UnityClient\Assets\Resources" packageCount="2"/>
 </packageDescription>
