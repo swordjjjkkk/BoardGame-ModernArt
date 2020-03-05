@@ -6,8 +6,8 @@
     <component id="n2_j8ls" name="deskarea" src="txz9y" fileName="GamePanel/deskarea.xml" xy="309,192"/>
     <component id="n3_j8ls" name="otherplayer1" src="txz9v" fileName="GamePanel/otherplayer.xml" xy="13,321"/>
     <component id="n4_j8ls" name="otherplayer2" src="txz9v" fileName="GamePanel/otherplayer.xml" xy="17,9"/>
-    <component id="n5_j8ls" name="cards" src="fkvs1z" fileName="Card/cards.xml" xy="5,4"/>
     <component id="n6_cin5" name="otherplayer3" src="txz9v" fileName="GamePanel/otherplayer.xml" xy="1023,10"/>
     <component id="n7_cin5" name="otherplayer4" src="txz9v" fileName="GamePanel/otherplayer.xml" xy="1049,289"/>
+    <component id="n5_j8ls" name="cards" src="fkvs1z" fileName="Card/cards.xml" xy="5,4"/>
   </displayList>
 </component>
