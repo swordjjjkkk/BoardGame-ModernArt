@@ -623,7 +623,7 @@ class Room {
         });
         var flag = false;
         for (var i in this.gamestate.playerlist) {
-            if (this.gamestate.playerlist[i].uid == session.uid) {
+            if (this.gamestate.playerlist[i].userid == session.uid) {
                 flag = true;
             }
 
