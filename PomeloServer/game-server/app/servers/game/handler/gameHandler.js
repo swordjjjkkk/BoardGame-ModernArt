@@ -61,12 +61,12 @@ class Poker {
 
     Shuffle() {
         this.staticcards = JSON.parse(JSON.stringify(staticpoker));
-        var pos1;
-        for (var i = 1; i < 70; i++) {
-
-            pos1 = Math.floor(Math.random() * (70 - i + 1));
-            this.SwapCard(pos1, 70 - i);
-        }
+        // var pos1;
+        // for (var i = 1; i < 70; i++) {
+        //
+        //     pos1 = Math.floor(Math.random() * (70 - i + 1));
+        //     this.SwapCard(pos1, 70 - i);
+        // }
 
 
     }
@@ -379,6 +379,8 @@ class Room {
                         // this.gamestate.playerlist[2].handcards = this.gamestate.playerlist[2].handcards.concat(this.poker.staticcards.splice(0, 6));
                         break;
                     case 4:
+                        //单人测试需要额外补牌，不然无法结束一局
+                        this.gamestate.playerlist[0].handcards = this.gamestate.playerlist[0].handcards.concat(this.poker.staticcards.splice(0, 10));
                         break;
                 }
             }
@@ -400,6 +402,8 @@ class Room {
                         // this.gamestate.playerlist[3].handcards = this.gamestate.playerlist[3].handcards.concat(this.poker.staticcards.splice(0, 4));
                         break;
                     case 4:
+                        //单人测试需要额外补牌，不然无法结束一局
+                        this.gamestate.playerlist[0].handcards = this.gamestate.playerlist[0].handcards.concat(this.poker.staticcards.splice(0, 10));
                         break;
                 }
             }
@@ -422,6 +426,8 @@ class Room {
                         // this.gamestate.playerlist[4].handcards = this.gamestate.playerlist[4].handcards.concat(this.poker.staticcards.splice(0, 3));
                         break;
                     case 4:
+                        //单人测试需要额外补牌，不然无法结束一局
+                        this.gamestate.playerlist[0].handcards = this.gamestate.playerlist[0].handcards.concat(this.poker.staticcards.splice(0, 10));
                         break;
                 }
             }
