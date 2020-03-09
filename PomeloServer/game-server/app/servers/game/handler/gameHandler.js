@@ -455,7 +455,7 @@ class Room {
         //恢复现场，开始下一局
         setTimeout(() => {
             this.GameRestart();
-        }, 10000);
+        }, 60000);
     }
 
     SellCard(msg) {
