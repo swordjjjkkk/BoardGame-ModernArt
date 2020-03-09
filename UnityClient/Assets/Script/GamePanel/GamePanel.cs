@@ -180,7 +180,13 @@ public class GamePanel : MonoBehaviour
             if(newdata.state=="waiting")
             {
                 Loom.QueueOnMainThread(() => {//切换为主线程
-
+                    //回合重新开始恢复牌的显示
+                    for(int i=0;i<BtnCard.Length;i++)
+                    {
+                        GImage temp = BtnCard[i].GetChild("n1").asImage;
+                        temp.visible = true;
+                       
+                    }
                     ReadyButton.visible = true;
                     
                     if(newdata.playerlist[pos].ready)
@@ -515,7 +521,15 @@ public class GamePanel : MonoBehaviour
 
             msg["data"] = usercardrender.choose;
             msg["money"]= Money.text;
-
+            if (GetSellType() == 4)
+            {
+                msg["money"] = Money.text;
+                if (int.Parse((string)msg["money"]) == 0)
+                {
+                    playermsg.text = "请输入拍卖价格";
+                    return;
+                }
+            }
 
             pclient.request("game.gameHandler.GameAction", msg, null);
             playermsg.text = "";
